@@ -5,7 +5,7 @@ import (
 	"reflect"
 )
 
-func Combine(multi ...cc.Context) cc.Context {
+func Combine(multi ...cc.Context) (cc.Context, cc.CancelFunc) {
 	ctx, cancel := cc.WithCancel(cc.Background())
 
 	go func() {
@@ -23,5 +23,5 @@ func Combine(multi ...cc.Context) cc.Context {
 		}
 	}()
 
-	return ctx
+	return ctx, cancel
 }

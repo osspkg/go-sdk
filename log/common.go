@@ -36,6 +36,11 @@ type Writer interface {
 	Debugf(format string, args ...interface{})
 }
 
+type WriterContext interface {
+	WithFields(Fields) Writer
+	Writer
+}
+
 // Logger base interface
 type Logger interface {
 	SetOutput(out io.Writer)
@@ -43,6 +48,5 @@ type Logger interface {
 	GetLevel() uint32
 	Close()
 
-	WithFields(Fields) Writer
-	Writer
+	WriterContext
 }

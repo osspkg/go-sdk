@@ -80,7 +80,7 @@ func newT7i(_ hello) ii {
 }
 
 func TestUnit_Dependencies(t *testing.T) {
-	ctx := newContext()
+	ctx := NewContext()
 	dep := newDic()
 
 	require.NoError(t, dep.Register([]interface{}{
@@ -136,7 +136,7 @@ func (d *demo1) Down() error {
 }
 
 func TestUnit_Dependencies2(t *testing.T) {
-	ctx := newContext()
+	ctx := NewContext()
 	dep := newDic()
 	require.NoError(t, dep.Register([]interface{}{
 		newDemo,
