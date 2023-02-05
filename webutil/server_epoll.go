@@ -32,14 +32,14 @@ type (
 		wg       sync.WaitGroup
 		handler  EpollHandler
 		log      log.Logger
-		conf     *ConfigEpoll
+		conf     ConfigEpoll
 		eof      []byte
 		listener net.Listener
 		epoll    *epoll
 	}
 )
 
-func NewServerEpoll(conf *ConfigEpoll, handler EpollHandler, eof []byte, l log.Logger) *ServerEpoll {
+func NewServerEpoll(conf ConfigEpoll, handler EpollHandler, eof []byte, l log.Logger) *ServerEpoll {
 	return &ServerEpoll{
 		status:  statusOff,
 		conf:    conf,

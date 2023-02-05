@@ -10,8 +10,7 @@ import (
 )
 
 func TestUnit_Combine(t *testing.T) {
-	cc, cancel := ccc.WithCancel(ccc.Background())
-	c := context.Combine(ccc.Background(), ccc.Background(), cc)
+	c, cancel := context.Combine(ccc.Background(), ccc.Background())
 	if c == nil {
 		t.Fatalf("contexts.Combine returned nil")
 	}

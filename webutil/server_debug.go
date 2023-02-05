@@ -15,7 +15,7 @@ type ServerDebug struct {
 }
 
 // NewServerDebug init debug service
-func NewServerDebug(c *ConfigHttp, l log.Logger) *ServerDebug {
+func NewServerDebug(c ConfigHttp, l log.Logger) *ServerDebug {
 	route := NewRouter()
 	return &ServerDebug{
 		server: NewServerHttp(c, route, l),

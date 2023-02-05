@@ -16,7 +16,7 @@ type (
 	}
 )
 
-func newContext() Context {
+func NewContext() Context {
 	ctx, cancel := context.WithCancel(context.Background())
 
 	return &_ctx{

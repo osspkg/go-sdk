@@ -122,7 +122,7 @@ func (a *_app) Run() {
 }
 
 func (a *_app) launch() {
-	ctx := newContext()
+	ctx := NewContext()
 	result := a.steps(
 		[]step{
 			{

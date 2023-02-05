@@ -27,7 +27,7 @@ type (
 
 	ServerHttp struct {
 		status  int64
-		conf    *ConfigHttp
+		conf    ConfigHttp
 		serv    *http.Server
 		handler http.Handler
 
@@ -37,7 +37,7 @@ type (
 )
 
 // NewServerHttp create default http server
-func NewServerHttp(conf *ConfigHttp, handler http.Handler, l log.Logger) *ServerHttp {
+func NewServerHttp(conf ConfigHttp, handler http.Handler, l log.Logger) *ServerHttp {
 	srv := &ServerHttp{
 		conf:    conf,
 		handler: handler,
