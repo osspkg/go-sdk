@@ -7,7 +7,9 @@ import (
 )
 
 // RecoveryMiddleware recovery go panic and write to log
-func RecoveryMiddleware(l log.Logger) func(func(http.ResponseWriter, *http.Request)) func(http.ResponseWriter, *http.Request) {
+func RecoveryMiddleware(l log.Logger) func(
+	func(http.ResponseWriter, *http.Request),
+) func(http.ResponseWriter, *http.Request) {
 	return func(f func(http.ResponseWriter, *http.Request)) func(http.ResponseWriter, *http.Request) {
 		return func(w http.ResponseWriter, r *http.Request) {
 			defer func() {

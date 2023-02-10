@@ -11,7 +11,6 @@ var (
 	ErrPoolNotFound = errors.New("pool not found")
 )
 
-// nolint: golint
 const (
 	MySQLDialect  = "mysql"
 	SQLiteDialect = "sqlite"

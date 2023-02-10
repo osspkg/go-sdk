@@ -32,7 +32,6 @@ type (
 	OAuth struct {
 		config *ConfigOAuth
 		list   map[string]OAuthProvider
-		active map[string]OAuthProvider
 		mux    sync.RWMutex
 	}
 

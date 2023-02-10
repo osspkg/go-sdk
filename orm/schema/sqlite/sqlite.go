@@ -6,7 +6,6 @@ import (
 
 	"github.com/deweppro/go-sdk/errors"
 	"github.com/deweppro/go-sdk/orm/schema"
-
 	_ "github.com/mattn/go-sqlite3" //nolint: golint
 )
 

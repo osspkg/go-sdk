@@ -134,7 +134,8 @@ func generate(c *Config, ttl time.Duration, sn int64, ca *Cert, cn ...string) (*
 	}
 
 	var privPEM bytes.Buffer
-	if err = pem.Encode(&privPEM, &pem.Block{Type: "RSA PRIVATE KEY", Bytes: cx509.MarshalPKCS1PrivateKey(pk)}); err != nil {
+	if err = pem.Encode(&privPEM,
+		&pem.Block{Type: "RSA PRIVATE KEY", Bytes: cx509.MarshalPKCS1PrivateKey(pk)}); err != nil {
 		return nil, errors.Wrapf(err, "encode private pem")
 	}
 
@@ -149,5 +150,5 @@ func NewCertCA(c *Config, ttl time.Duration, cn string) (*Cert, error) {
 }
 
 func NewCert(c *Config, ttl time.Duration, sn int64, ca *Cert, cn ...string) (*Cert, error) {
-	return generate(c, ttl, 1, ca, cn...)
+	return generate(c, ttl, sn, ca, cn...)
 }

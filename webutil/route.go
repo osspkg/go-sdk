@@ -29,14 +29,18 @@ func (v *Router) Route(path string, ctrl func(http.ResponseWriter, *http.Request
 }
 
 // Global add global middlewares
-func (v *Router) Global(middlewares ...func(func(http.ResponseWriter, *http.Request)) func(http.ResponseWriter, *http.Request)) {
+func (v *Router) Global(
+	middlewares ...func(func(http.ResponseWriter, *http.Request),
+	) func(http.ResponseWriter, *http.Request)) {
 	v.lock.Lock()
 	v.handler.Middlewares("", middlewares...)
 	v.lock.Unlock()
 }
 
 // Middlewares add middlewares to route
-func (v *Router) Middlewares(path string, middlewares ...func(func(http.ResponseWriter, *http.Request)) func(http.ResponseWriter, *http.Request)) {
+func (v *Router) Middlewares(
+	path string, middlewares ...func(func(http.ResponseWriter, *http.Request),
+	) func(http.ResponseWriter, *http.Request)) {
 	v.lock.Lock()
 	v.handler.Middlewares(path, middlewares...)
 	v.lock.Unlock()

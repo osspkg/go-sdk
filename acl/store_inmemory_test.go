@@ -4,7 +4,6 @@ import (
 	"testing"
 
 	"github.com/deweppro/go-sdk/acl"
-
 	"github.com/stretchr/testify/require"
 )
 

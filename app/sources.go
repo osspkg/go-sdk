@@ -28,7 +28,9 @@ func (v Sources) Decode(configs ...interface{}) error {
 	return errBadFileFormat
 }
 
-func (v Sources) unmarshal(title string, data []byte, call func([]byte, interface{}) error, configs ...interface{}) error {
+func (v Sources) unmarshal(
+	title string, data []byte, call func([]byte, interface{},
+	) error, configs ...interface{}) error {
 	for _, conf := range configs {
 		if err := call(data, conf); err != nil {
 			return errors.Wrapf(err, title)

@@ -64,8 +64,10 @@ func TestUnit_Wrap(t *testing.T) {
 			wantErr: true,
 		},
 		{
-			name:    "Case4",
-			args:    args{msg: []error{errors.Wrapf(errors.New("err1"), "err1 message"), errors.Wrapf(e.New("err2"), "err2 message"), errors.Wrapf(e.New("err3"), "err3 message")}},
+			name: "Case4",
+			args: args{msg: []error{errors.Wrapf(errors.New("err1"), "err1 message"),
+				errors.Wrapf(e.New("err2"), "err2 message"),
+				errors.Wrapf(e.New("err3"), "err3 message")}},
 			want:    "err1 message: err1: err2 message: err2: err3 message: err3",
 			wantErr: true,
 		},

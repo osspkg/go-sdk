@@ -62,7 +62,9 @@ type oauth2Config interface {
 	Client(ctx context.Context, t *oauth2.Token) *http.Client
 }
 
-func oauth2ExchangeContext(ctx context.Context, code string, uri string, srv oauth2Config, model json.Unmarshaler) error {
+func oauth2ExchangeContext(
+	ctx context.Context, code string, uri string, srv oauth2Config, model json.Unmarshaler,
+) error {
 	tok, err := srv.Exchange(ctx, code)
 	if err != nil {
 		return errors.Wrapf(err, "exchange to oauth service")
