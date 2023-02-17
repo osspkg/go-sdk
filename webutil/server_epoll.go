@@ -335,7 +335,7 @@ func newEpollConn(conn io.ReadWriter, handler EpollHandler, eof []byte) error {
 	if !ok {
 		return errInvalidPoolType
 	}
-	defer epollBodyPool.Put(b[:0])
+	defer epollBodyPool.Put(b[:0]) //nolint:staticcheck
 
 	for {
 		if len(b) == cap(b) {

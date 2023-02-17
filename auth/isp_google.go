@@ -6,9 +6,8 @@ import (
 	"context"
 	"encoding/json"
 
-	"golang.org/x/oauth2/google"
-
 	"golang.org/x/oauth2"
+	"golang.org/x/oauth2/google"
 )
 
 const CodeGoogle = "google"

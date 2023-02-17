@@ -75,3 +75,28 @@ func CalcHash(filename string, h hash.Hash) (string, error) {
 	h.Reset()
 	return result, nil
 }
+
+func Copy(dst, src string, mode os.FileMode) error {
+	source, err := os.OpenFile(src, os.O_RDONLY, 0)
+	if err != nil {
+		return err
+	}
+	defer source.Close() //nolint: errcheck
+
+	if mode == 0 {
+		fi, err0 := source.Stat()
+		if err0 != nil {
+			return err0
+		}
+		mode = fi.Mode()
+	}
+
+	dist, err := os.OpenFile(dst, os.O_RDWR|os.O_CREATE|os.O_TRUNC, mode)
+	if err != nil {
+		return err
+	}
+	defer dist.Close() //nolint: errcheck
+
+	_, err = io.Copy(dist, source)
+	return err
+}

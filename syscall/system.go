@@ -4,13 +4,13 @@ import (
 	"os"
 	"os/signal"
 	"strconv"
-	s "syscall"
+	scall "syscall"
 )
 
 // OnStop calling a function if you send a system event stop
 func OnStop(callFunc func()) {
 	quit := make(chan os.Signal, 4)
-	signal.Notify(quit, os.Interrupt, s.SIGINT, s.SIGTERM, s.SIGKILL)
+	signal.Notify(quit, os.Interrupt, scall.SIGINT, scall.SIGTERM, scall.SIGKILL) //nolint:staticcheck
 	<-quit
 
 	callFunc()
@@ -19,7 +19,7 @@ func OnStop(callFunc func()) {
 // OnUp calling a function if you send a system event SIGHUP
 func OnUp(callFunc func()) {
 	quit := make(chan os.Signal, 1)
-	signal.Notify(quit, s.SIGHUP)
+	signal.Notify(quit, scall.SIGHUP)
 	<-quit
 
 	callFunc()
@@ -36,6 +36,6 @@ func OnCustom(callFunc func(), sig ...os.Signal) {
 
 // Pid write pid file
 func Pid(filename string) error {
-	pid := strconv.Itoa(s.Getpid())
+	pid := strconv.Itoa(scall.Getpid())
 	return os.WriteFile(filename, []byte(pid), 0755)
 }

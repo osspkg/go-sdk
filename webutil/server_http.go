@@ -8,10 +8,9 @@ import (
 	"sync/atomic"
 	"time"
 
-	"github.com/deweppro/go-sdk/log"
-
 	application "github.com/deweppro/go-sdk/app"
 	"github.com/deweppro/go-sdk/errors"
+	"github.com/deweppro/go-sdk/log"
 	"github.com/deweppro/go-sdk/netutil"
 )
 

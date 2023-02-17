@@ -2,7 +2,6 @@ package log
 
 import "io"
 
-// nolint: golint
 const (
 	levelFatal uint32 = iota
 	LevelError

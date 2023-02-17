@@ -5,8 +5,6 @@ import (
 	"fmt"
 )
 
-var useTrace = false
-
 type err struct {
 	cause   error
 	message string

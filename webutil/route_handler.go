@@ -63,7 +63,9 @@ func (v *ctrlHandler) Route(path string, ctrl func(http.ResponseWriter, *http.Re
 }
 
 // Middlewares add middleware to route
-func (v *ctrlHandler) Middlewares(path string, middlewares ...func(func(http.ResponseWriter, *http.Request)) func(http.ResponseWriter, *http.Request)) {
+func (v *ctrlHandler) Middlewares(
+	path string, middlewares ...func(func(http.ResponseWriter, *http.Request),
+	) func(http.ResponseWriter, *http.Request)) {
 	uh := v
 	uris := urlSplit(path)
 	for _, uri := range uris {
@@ -77,10 +79,13 @@ func (v *ctrlHandler) NoFoundHandler(call func(http.ResponseWriter, *http.Reques
 }
 
 // Match find route in tree
-func (v *ctrlHandler) Match(path string, method string) (int, func(http.ResponseWriter, *http.Request), uriParamData, []func(func(http.ResponseWriter, *http.Request)) func(http.ResponseWriter, *http.Request)) {
+func (v *ctrlHandler) Match(path string, method string) (
+	int, func(http.ResponseWriter, *http.Request), uriParamData, []func(func(http.ResponseWriter, *http.Request),
+	) func(http.ResponseWriter, *http.Request)) {
 	uh := v
 	uris := urlSplit(path)
-	midd := append(make([]func(func(http.ResponseWriter, *http.Request)) func(http.ResponseWriter, *http.Request), 0, len(uh.middlewares)), uh.middlewares...)
+	midd := append(make([]func(func(http.ResponseWriter, *http.Request)) func(http.ResponseWriter, *http.Request),
+		0, len(uh.middlewares)), uh.middlewares...)
 	vr := uriParamData{}
 	for _, uri := range uris {
 		if uh = uh.next(uri, vr); uh != nil {
