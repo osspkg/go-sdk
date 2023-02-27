@@ -7,7 +7,7 @@ require (
 	github.com/go-sql-driver/mysql v1.7.0
 	github.com/mailru/easyjson v0.7.7
 	github.com/mattn/go-sqlite3 v1.14.16
-	github.com/stretchr/testify v1.8.1
+	github.com/stretchr/testify v1.8.2
 	golang.org/x/crypto v0.6.0
 	golang.org/x/oauth2 v0.5.0
 	golang.org/x/sys v0.5.0
