@@ -3,7 +3,7 @@ package mysql
 import (
 	"database/sql"
 	"fmt"
-	"strings"
+	"net/url"
 	"sync"
 	"time"
 
@@ -36,16 +36,18 @@ type (
 		Schema            string        `yaml:"schema"`
 		User              string        `yaml:"user"`
 		Password          string        `yaml:"password"`
-		MaxIdleConn       int           `yaml:"maxidleconn"`
-		MaxOpenConn       int           `yaml:"maxopenconn"`
-		MaxConnTTL        time.Duration `yaml:"maxconnttl"`
-		InterpolateParams bool          `yaml:"interpolateparams"`
 		Timezone          string        `yaml:"timezone"`
 		TxIsolationLevel  string        `yaml:"txisolevel"`
 		Charset           string        `yaml:"charset"`
+		Collation         string        `yaml:"collation"`
+		MaxIdleConn       int           `yaml:"maxidleconn"`
+		MaxOpenConn       int           `yaml:"maxopenconn"`
+		InterpolateParams bool          `yaml:"interpolateparams"`
+		MaxConnTTL        time.Duration `yaml:"maxconnttl"`
 		Timeout           time.Duration `yaml:"timeout"`
 		ReadTimeout       time.Duration `yaml:"readtimeout"`
 		WriteTimeout      time.Duration `yaml:"writetimeout"`
+		OtherParams       string        `yaml:"other_params"`
 	}
 
 	pool struct {
@@ -77,40 +79,52 @@ func (i Item) Setup(s schema.SetupInterface) {
 
 // GetDSN connection params
 func (i Item) GetDSN() string {
-	params := []string{"autocommit=true"}
+	params, err := url.ParseQuery(i.OtherParams)
+	if err != nil {
+		params = url.Values{}
+	}
+
+	params.Add("autocommit", "true")
+	params.Add("interpolateParams", fmt.Sprintf("%t", i.InterpolateParams))
+
 	//---
 	if len(i.Charset) == 0 {
-		i.Charset = "utf8mb4,utf8"
+		i.Charset = "utf8mb4"
 	}
-	params = append(params, fmt.Sprintf("charset=%s", i.Charset))
+	params.Add("charset", i.Charset)
+	//---
+	if len(i.Collation) == 0 {
+		i.Collation = "utf8mb4_unicode_ci"
+	}
+	params.Add("collation", i.Collation)
 	//---
 	if i.Timeout == 0 {
 		i.Timeout = defaultTimeoutConn
 	}
-	params = append(params, fmt.Sprintf("timeout=%s", i.Timeout))
+	params.Add("timeout", i.Timeout.String())
 	//---
 	if i.ReadTimeout == 0 {
 		i.ReadTimeout = defaultTimeout
 	}
-	params = append(params, fmt.Sprintf("readTimeout=%s", i.ReadTimeout))
+	params.Add("readTimeout", i.ReadTimeout.String())
 	//---
 	if i.WriteTimeout == 0 {
 		i.WriteTimeout = defaultTimeout
 	}
-	params = append(params, fmt.Sprintf("writeTimeout=%s", i.WriteTimeout))
+	params.Add("writeTimeout", i.WriteTimeout.String())
 	//---
 	if len(i.TxIsolationLevel) > 0 {
-		params = append(params, fmt.Sprintf("transaction_isolation=%s", i.TxIsolationLevel))
+		params.Add("transaction_isolation", i.TxIsolationLevel)
 	}
 	//---
 	if len(i.Timezone) == 0 {
 		i.Timezone = "UTC"
 	}
-	params = append(params, fmt.Sprintf("loc=%s", i.Timezone))
+	params.Add("loc", i.Timezone)
 	//---
-	params = append(params, fmt.Sprintf("interpolateParams=%t", i.InterpolateParams))
+
 	//---
-	return fmt.Sprintf("%s:%s@tcp(%s:%d)/%s?%s", i.User, i.Password, i.Host, i.Port, i.Schema, strings.Join(params, "&"))
+	return fmt.Sprintf("%s:%s@tcp(%s:%d)/%s?%s", i.User, i.Password, i.Host, i.Port, i.Schema, params.Encode())
 }
 
 // New init new mysql connection

@@ -2,6 +2,8 @@ package sqlite
 
 import (
 	"database/sql"
+	"fmt"
+	"net/url"
 	"sync"
 
 	"github.com/deweppro/go-sdk/errors"
@@ -22,8 +24,13 @@ type (
 
 	//Item config model
 	Item struct {
-		Name string `yaml:"name"`
-		File string `yaml:"file"`
+		Name        string `yaml:"name"`
+		File        string `yaml:"file"`
+		Cache       string `yaml:"cache"`
+		Mode        string `yaml:"mode"`
+		Journal     string `yaml:"journal"`
+		LockingMode string `yaml:"locking_mode"`
+		OtherParams string `yaml:"other_params"`
 	}
 
 	pool struct {
@@ -45,7 +52,34 @@ func (c *Config) List() (list []schema.ItemInterface) {
 func (i Item) GetName() string { return i.Name }
 
 // GetDSN connection params
-func (i Item) GetDSN() string { return i.File }
+func (i Item) GetDSN() string {
+	params, err := url.ParseQuery(i.OtherParams)
+	if err != nil {
+		params = url.Values{}
+	}
+	//---
+	if len(i.Cache) == 0 {
+		i.Cache = "private"
+	}
+	params.Add("cache", i.Cache)
+	//---
+	if len(i.Mode) == 0 {
+		i.Mode = "rwc"
+	}
+	params.Add("mode", i.Mode)
+	//---
+	if len(i.Journal) == 0 {
+		i.Journal = "TRUNCATE"
+	}
+	params.Add("_journal", i.Journal)
+	//---
+	if len(i.LockingMode) == 0 {
+		i.LockingMode = "EXCLUSIVE"
+	}
+	params.Add("_locking_mode", i.LockingMode)
+	//--
+	return fmt.Sprintf("file:%s?%s", i.File, params.Encode())
+}
 
 // Setup setting config conntections params
 func (i Item) Setup(_ schema.SetupInterface) {}

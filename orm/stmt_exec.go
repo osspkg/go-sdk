@@ -65,6 +65,10 @@ func callExecContext(ctx context.Context, db dbGetter, call func(q Executor)) er
 
 	call(q)
 
+	if len(q.P) == 0 {
+		q.P = append(q.P, []interface{}{})
+	}
+
 	stmt, err := db.PrepareContext(ctx, q.Q)
 	if err != nil {
 		return err
@@ -72,7 +76,7 @@ func callExecContext(ctx context.Context, db dbGetter, call func(q Executor)) er
 	defer stmt.Close() //nolint: errcheck
 	var total Result
 	for _, params := range q.P {
-		result, err0 := stmt.Exec(params...)
+		result, err0 := stmt.ExecContext(ctx, params...)
 		if err0 != nil {
 			return err0
 		}
