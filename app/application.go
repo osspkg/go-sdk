@@ -17,6 +17,7 @@ type (
 		Modules(modules ...interface{}) App
 		ConfigFile(filename string, configs ...interface{}) App
 		Run()
+		Invoke(call interface{})
 	}
 
 	_app struct {
