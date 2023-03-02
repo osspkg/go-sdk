@@ -60,6 +60,7 @@ type (
 	_serv struct {
 		tree   *treeItem
 		status uint32
+		ctx    Context
 	}
 	treeItem struct {
 		Previous *treeItem
@@ -68,10 +69,11 @@ type (
 	}
 )
 
-func newService() *_serv {
+func newService(ctx Context) *_serv {
 	return &_serv{
 		tree:   nil,
 		status: statusDown,
+		ctx:    ctx,
 	}
 }
 
@@ -80,10 +82,10 @@ func (s *_serv) IsUp() bool {
 	return atomic.LoadUint32(&s.status) == statusUp
 }
 
-// Add - add new service by interface
-func (s *_serv) Add(v interface{}) error {
-	if s.IsUp() {
-		return errDepRunning
+// AddAndRun - add new service by interface
+func (s *_serv) AddAndRun(v interface{}) error {
+	if !s.IsUp() {
+		return errDepBuilderNotRunning
 	}
 
 	if !isService(v) {
@@ -106,39 +108,41 @@ func (s *_serv) Add(v interface{}) error {
 		s.tree = n
 	}
 
+	if vv, ok := v.(ServiceContextInterface); ok {
+		if err := vv.Up(s.ctx); err != nil {
+			return err
+		}
+	}
+	if vv, ok := v.(ServiceInterface); ok {
+		if err := vv.Up(); err != nil {
+			return err
+		}
+	}
+
 	return nil
 }
 
-// Up - start all services
-func (s *_serv) Up(ctx Context) error {
+func (s *_serv) MakeAsUp() error {
 	if !atomic.CompareAndSwapUint32(&s.status, statusDown, statusUp) {
-		return errDepRunning
+		return errDepBuilderNotRunning
 	}
+	return nil
+}
+
+func (s *_serv) IterateOver() {
 	if s.tree == nil {
-		return nil
+		return
 	}
 	for s.tree.Previous != nil {
 		s.tree = s.tree.Previous
 	}
 	for {
-		if vv, ok := s.tree.Current.(ServiceContextInterface); ok {
-			if err := vv.Up(ctx); err != nil {
-				return err
-			}
-		} else if vv, ok := s.tree.Current.(ServiceInterface); ok {
-			if err := vv.Up(); err != nil {
-				return err
-			}
-		} else {
-			return errors.Wrapf(errServiceUnknown, "service <%T>", s.tree.Current)
-		}
 		if s.tree.Next == nil {
 			break
 		}
 		s.tree = s.tree.Next
 	}
-
-	return nil
+	return
 }
 
 // Down - stop all services

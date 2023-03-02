@@ -15,10 +15,10 @@ type _dic struct {
 	list *dicMap
 }
 
-func newDic() *_dic {
+func newDic(ctx Context) *_dic {
 	return &_dic{
 		kahn: kahn.New(),
-		srv:  newService(),
+		srv:  newService(ctx),
 		list: newDicMap(),
 	}
 }
@@ -28,17 +28,12 @@ func (v *_dic) Down() error {
 	return v.srv.Down()
 }
 
-// Up - start all services in dependencies
-func (v *_dic) Up(ctx Context) error {
-	return v.srv.Up(ctx)
-}
-
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 // Register - register a new dependency
 func (v *_dic) Register(items ...interface{}) error {
 	if v.srv.IsUp() {
-		return errDepRunning
+		return errDepBuilderNotRunning
 	}
 
 	for _, item := range items {
@@ -84,8 +79,8 @@ func (v *_dic) Register(items ...interface{}) error {
 
 // Build - initialize dependencies
 func (v *_dic) Build() error {
-	if v.srv.IsUp() {
-		return errDepRunning
+	if err := v.srv.MakeAsUp(); err != nil {
+		return err
 	}
 
 	err := v.list.foreach(v.calcFunc, v.calcStruct, v.calcOther)
@@ -97,13 +92,41 @@ func (v *_dic) Build() error {
 		return errors.Wrapf(err, "dependency graph calculation")
 	}
 
-	return v.exec()
+	return v.exec(nil)
 }
 
 // Inject - obtained dependence
 func (v *_dic) Inject(item interface{}) error {
 	_, err := v.callArgs(item)
 	return err
+}
+
+// Invoke - obtained dependence
+func (v *_dic) Invoke(item interface{}) error {
+	if err := v.Register(item); err != nil {
+		return err
+	}
+
+	if err := v.srv.MakeAsUp(); err != nil {
+		return err
+	}
+
+	err := v.list.foreach(v.calcFunc, v.calcStruct, v.calcOther)
+	if err != nil {
+		return errors.Wrapf(err, "building dependency graph")
+	}
+
+	if err = v.kahn.Build(); err != nil {
+		return errors.Wrapf(err, "dependency graph calculation")
+	}
+
+	ref := reflect.TypeOf(item)
+	addr, ok := getRefAddr(ref)
+	if !ok {
+		return fmt.Errorf("resolve invoke reference")
+	}
+
+	return v.exec(&addr)
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -212,7 +235,7 @@ func (v *_dic) callArgs(item interface{}) ([]reflect.Value, error) {
 	}
 }
 
-func (v *_dic) exec() error {
+func (v *_dic) exec(breakPoint *string) error {
 	names := make(map[string]struct{})
 	for _, name := range v.kahn.Result() {
 		if name == empty {
@@ -242,12 +265,12 @@ func (v *_dic) exec() error {
 		for _, arg := range args {
 			addr, _ := getRefAddr(arg.Type())
 			if vv, ok := asService(arg); ok {
-				if err = v.srv.Add(vv); err != nil {
+				if err = v.srv.AddAndRun(vv); err != nil {
 					return errors.Wrapf(err, "service initialization error <%s>", addr)
 				}
 			}
 			if vv, ok := asServiceContext(arg); ok {
-				if err = v.srv.Add(vv); err != nil {
+				if err = v.srv.AddAndRun(vv); err != nil {
 					return errors.Wrapf(err, "service initialization error <%s>", addr)
 				}
 			}
@@ -260,7 +283,13 @@ func (v *_dic) exec() error {
 			}
 		}
 		delete(names, name)
+
+		if breakPoint != nil && *breakPoint == name {
+			break
+		}
 	}
+
+	v.srv.IterateOver()
 
 	return nil
 }

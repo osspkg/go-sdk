@@ -27,15 +27,18 @@ type (
 		packages *_dic
 		logout   *_log
 		log      log.Logger
+		ctx      Context
 	}
 )
 
 // New create application
 func New() App {
+	ctx := NewContext()
 	return &_app{
 		modules:  Modules{},
 		configs:  Modules{},
-		packages: newDic(),
+		packages: newDic(ctx),
+		ctx:      ctx,
 	}
 }
 
@@ -71,6 +74,72 @@ func (a *_app) ConfigFile(filename string, configs ...interface{}) App {
 
 // Run run application
 func (a *_app) Run() {
+	a.prepareConfig(false)
+
+	result := a.steps(
+		[]step{
+			{
+				Message: "Registering dependencies",
+				Call:    func() error { return a.packages.Register(a.modules...) },
+			},
+			{
+				Message: "Running dependencies",
+				Call:    func() error { return a.packages.Build() },
+			},
+		},
+		func(er bool) {
+			if er {
+				a.ctx.Close()
+				return
+			}
+			go syscall.OnStop(a.ctx.Close)
+			<-a.ctx.Done()
+		},
+		[]step{
+			{
+				Message: "Stop dependencies",
+				Call:    func() error { return a.packages.Down() },
+			},
+		},
+	)
+	console.FatalIfErr(a.logout.Close(), "close log file")
+	if result {
+		os.Exit(1)
+	}
+	os.Exit(0)
+}
+
+// Invoke run application
+func (a *_app) Invoke(call interface{}) {
+	a.prepareConfig(true)
+
+	result := a.steps(
+		[]step{
+			{
+				Message: "Registering dependencies",
+				Call:    func() error { return a.packages.Register(a.modules...) },
+			},
+			{
+				Message: "Running dependencies",
+				Call:    func() error { return a.packages.Invoke(call) },
+			},
+		},
+		func(_ bool) {},
+		[]step{
+			{
+				Message: "Stop dependencies",
+				Call:    func() error { return a.packages.Down() },
+			},
+		},
+	)
+	console.FatalIfErr(a.logout.Close(), "close log file")
+	if result {
+		os.Exit(1)
+	}
+	os.Exit(0)
+}
+
+func (a *_app) prepareConfig(interactive bool) {
 	var err error
 	if len(a.cfile) == 0 {
 		a.logout = newLog(&Config{
@@ -88,6 +157,10 @@ func (a *_app) Run() {
 		config := &Config{}
 		if err = a.sources.Decode(config); err != nil {
 			console.FatalIfErr(err, "decode config file: %s", a.cfile)
+		}
+		if interactive {
+			config.Level = 4
+			config.LogFile = "/dev/stdout"
 		}
 		a.logout = newLog(config)
 		if a.log == nil {
@@ -108,7 +181,7 @@ func (a *_app) Run() {
 		}
 		a.modules = a.modules.Add(configs...)
 
-		if len(config.PidFile) > 0 {
+		if !interactive && len(config.PidFile) > 0 {
 			if err = syscall.Pid(config.PidFile); err != nil {
 				a.log.WithFields(log.Fields{
 					"err":  err.Error(),
@@ -117,47 +190,6 @@ func (a *_app) Run() {
 			}
 		}
 	}
-
-	a.launch()
-}
-
-func (a *_app) launch() {
-	ctx := NewContext()
-	result := a.steps(
-		[]step{
-			{
-				Message: "register app dependencies",
-				Call:    func() error { return a.packages.Register(a.modules...) },
-			},
-			{
-				Message: "build app dependencies",
-				Call:    func() error { return a.packages.Build() },
-			},
-			{
-				Message: "start app dependencies",
-				Call:    func() error { return a.packages.Up(ctx) },
-			},
-		},
-		func(er bool) {
-			if er {
-				ctx.Close()
-				return
-			}
-			go syscall.OnStop(ctx.Close)
-			<-ctx.Done()
-		},
-		[]step{
-			{
-				Message: "stop app dependencies",
-				Call:    func() error { return a.packages.Down() },
-			},
-		},
-	)
-	console.FatalIfErr(a.logout.Close(), "close log file")
-	if result {
-		os.Exit(1)
-	}
-	os.Exit(0)
 }
 
 type step struct {
