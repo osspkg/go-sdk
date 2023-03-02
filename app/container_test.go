@@ -80,8 +80,7 @@ func newT7i(_ hello) ii {
 }
 
 func TestUnit_Dependencies(t *testing.T) {
-	ctx := NewContext()
-	dep := newDic()
+	dep := newDic(NewContext())
 
 	require.NoError(t, dep.Register([]interface{}{
 		newT1, newT2, newT5, newT6, newT7(), newT8,
@@ -92,8 +91,7 @@ func TestUnit_Dependencies(t *testing.T) {
 	}...))
 
 	require.NoError(t, dep.Build())
-	require.NoError(t, dep.Up(ctx))
-	require.Error(t, dep.Up(ctx))
+	require.Error(t, dep.Build())
 
 	require.NoError(t, dep.Inject(func(
 		v1 *t1, v2 *t2, v3 *t5, v4 *t6, v5 *t6,
@@ -136,14 +134,12 @@ func (d *demo1) Down() error {
 }
 
 func TestUnit_Dependencies2(t *testing.T) {
-	ctx := NewContext()
-	dep := newDic()
+	dep := newDic(NewContext())
 	require.NoError(t, dep.Register([]interface{}{
 		newDemo,
 	}...))
 	require.NoError(t, dep.Build())
-	require.NoError(t, dep.Up(ctx))
-	require.Error(t, dep.Up(ctx))
+	require.Error(t, dep.Build())
 	require.NoError(t, dep.Down())
 	require.Error(t, dep.Down())
 }
@@ -153,7 +149,7 @@ type demo4 struct{}
 func newDemo4() (*demo4, error) { return nil, fmt.Errorf("fail init constructor demo4") }
 
 func TestUnit_Dependencies3(t *testing.T) {
-	dep := newDic()
+	dep := newDic(NewContext())
 	require.NoError(t, dep.Register([]interface{}{
 		newDemo4,
 	}...))
@@ -168,7 +164,7 @@ type demo5 struct{}
 func newDemo5() error { return fmt.Errorf("fail init constructor newDemo5") }
 
 func TestUnit_Dependencies4(t *testing.T) {
-	dep := newDic()
+	dep := newDic(NewContext())
 	require.NoError(t, dep.Register([]interface{}{
 		newDemo5,
 	}...))
@@ -176,4 +172,31 @@ func TestUnit_Dependencies4(t *testing.T) {
 	require.Error(t, err)
 	fmt.Println(err.Error())
 	require.Contains(t, err.Error(), "fail init constructor newDemo5")
+}
+
+type demo6 struct{}
+
+func newDemo6() *demo6 { return &demo6{} }
+func (d *demo6) Up() error {
+	fmt.Println("demo6 up")
+	return nil
+}
+func (d *demo6) Down() error {
+	fmt.Println("demo6 down")
+	return nil
+}
+func (d *demo6) Name() string {
+	return "DEMO 6"
+}
+
+func TestUnit_Invoke(t *testing.T) {
+	dep := newDic(NewContext())
+	require.NoError(t, dep.Register([]interface{}{
+		newDemo6,
+	}...))
+	require.NoError(t, dep.Invoke(func(d *demo6) {
+		fmt.Println("Invoke", d.Name())
+	}))
+	require.NoError(t, dep.Down())
+	require.Error(t, dep.Down())
 }
