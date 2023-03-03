@@ -15,6 +15,7 @@ type (
 
 	Database interface {
 		Pool(name string) Stmt
+		Dialect() string
 	}
 
 	options struct {
@@ -57,4 +58,8 @@ func New(c schema.Connector, opts ...PluginSetup) Database {
 // Pool getting pool connections by name
 func (v *_db) Pool(name string) Stmt {
 	return newStmt(name, v.conn, v.opts)
+}
+
+func (v *_db) Dialect() string {
+	return v.conn.Dialect()
 }
