@@ -45,7 +45,7 @@ func typingRefPtr(vv []interface{}, call func(interface{}) error) ([]interface{}
 			}
 			result = append(result, v)
 		default:
-			return nil, fmt.Errorf("supported type <%T>", v)
+			return nil, fmt.Errorf("supported type [%T]", v)
 		}
 	}
 	return result, nil

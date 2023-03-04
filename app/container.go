@@ -259,19 +259,19 @@ func (v *_dic) exec(breakPoint *string) error {
 
 		args, err := v.callArgs(item)
 		if err != nil {
-			return errors.Wrapf(err, "initialize error <%s>", name)
+			return errors.Wrapf(err, "initialize error [%s]", name)
 		}
 
 		for _, arg := range args {
 			addr, _ := getRefAddr(arg.Type())
 			if vv, ok := asService(arg); ok {
 				if err = v.srv.AddAndRun(vv); err != nil {
-					return errors.Wrapf(err, "service initialization error <%s>", addr)
+					return errors.Wrapf(err, "service initialization error [%s]", addr)
 				}
 			}
 			if vv, ok := asServiceContext(arg); ok {
 				if err = v.srv.AddAndRun(vv); err != nil {
-					return errors.Wrapf(err, "service initialization error <%s>", addr)
+					return errors.Wrapf(err, "service initialization error [%s]", addr)
 				}
 			}
 			delete(names, addr)
@@ -279,7 +279,7 @@ func (v *_dic) exec(breakPoint *string) error {
 				continue
 			}
 			if err = v.list.Add(arg.Type(), arg.Interface(), typeExist); err != nil {
-				return errors.Wrapf(err, "initialize error <%s>", addr)
+				return errors.Wrapf(err, "initialize error [%s]", addr)
 			}
 		}
 		delete(names, name)
@@ -331,7 +331,7 @@ func (v *dicMap) Add(place, value interface{}, t int) error {
 	addr, ok := getRefAddr(ref)
 	if !ok {
 		if addr != "error" {
-			return fmt.Errorf("dependency <%s> is not supported", addr)
+			return fmt.Errorf("dependency [%s] is not supported", addr)
 		}
 		//return nil
 	}
@@ -341,7 +341,7 @@ func (v *dicMap) Add(place, value interface{}, t int) error {
 			return nil
 		}
 		if vv.Type == typeExist {
-			return fmt.Errorf("dependency <%s> already initiated", addr)
+			return fmt.Errorf("dependency [%s] already initiated", addr)
 		}
 	}
 	v.data[addr] = &dicMapItem{
@@ -359,7 +359,7 @@ func (v *dicMap) Get(addr string) (interface{}, error) {
 	if vv, ok := v.data[addr]; ok {
 		return vv.Value, nil
 	}
-	return nil, fmt.Errorf("dependency <%s> not initiated", addr)
+	return nil, fmt.Errorf("dependency [%s] not initiated", addr)
 }
 
 func (v *dicMap) HasType(addr string, t int) bool {
@@ -379,7 +379,7 @@ func (v *dicMap) Step(addr string) (int, error) {
 	if vv, ok := v.data[addr]; ok {
 		return vv.Type, nil
 	}
-	return 0, fmt.Errorf("dependency <%s> not initiated", addr)
+	return 0, fmt.Errorf("dependency [%s] not initiated", addr)
 }
 
 func (v *dicMap) foreach(kFunc, kStruct, kOther func(addr string, ref reflect.Type) error) error {
