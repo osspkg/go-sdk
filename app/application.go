@@ -178,7 +178,7 @@ func (a *_app) prepareConfig(interactive bool) {
 		if err != nil {
 			a.log.WithFields(log.Fields{
 				"err": err.Error(),
-			}).Fatalf("decode config file")
+			}).Fatalf("Decode config file")
 		}
 		a.modules = a.modules.Add(configs...)
 
@@ -187,7 +187,7 @@ func (a *_app) prepareConfig(interactive bool) {
 				a.log.WithFields(log.Fields{
 					"err":  err.Error(),
 					"file": config.PidFile,
-				}).Fatalf("create pid file")
+				}).Fatalf("Create pid file")
 			}
 		}
 	}

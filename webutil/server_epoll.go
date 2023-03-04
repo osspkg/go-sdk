@@ -69,7 +69,7 @@ func (s *ServerEpoll) Up(ctx app.Context) (err error) {
 	if s.epoll, err = newEpoll(s.log); err != nil {
 		return
 	}
-	s.log.WithFields(log.Fields{"ip": s.conf.Addr}).Infof("tcp server started")
+	s.log.WithFields(log.Fields{"ip": s.conf.Addr}).Infof("TCP server started")
 	s.wg.Add(2)
 	go s.connAccept(ctx)
 	go s.epollAccept(ctx)
@@ -81,7 +81,7 @@ func (s *ServerEpoll) Down() error {
 	close(s.close)
 	err := errors.Wrap(s.epoll.CloseAll(), s.listener.Close())
 	s.wg.Wait()
-	s.log.WithFields(log.Fields{"ip": s.conf.Addr}).Infof("tcp server stopped")
+	s.log.WithFields(log.Fields{"ip": s.conf.Addr}).Infof("TCP server stopped")
 	return err
 }
 
@@ -97,7 +97,7 @@ func (s *ServerEpoll) connAccept(ctx app.Context) {
 			case <-s.close:
 				return
 			default:
-				s.log.WithFields(log.Fields{"err": err.Error()}).Errorf("epoll conn accept")
+				s.log.WithFields(log.Fields{"err": err.Error()}).Errorf("Epoll conn accept")
 				if err0, ok := err.(net.Error); ok && err0.Temporary() {
 					time.Sleep(1 * time.Second)
 					continue
@@ -108,7 +108,7 @@ func (s *ServerEpoll) connAccept(ctx app.Context) {
 		if err = s.epoll.AddOrClose(conn); err != nil {
 			s.log.WithFields(log.Fields{
 				"err": err.Error(), "ip": conn.RemoteAddr().String(),
-			}).Errorf("epoll add conn")
+			}).Errorf("Epoll add conn")
 		}
 	}
 }
@@ -131,7 +131,7 @@ func (s *ServerEpoll) epollAccept(ctx app.Context) {
 			case unix.EINTR:
 				continue
 			default:
-				s.log.WithFields(log.Fields{"err": err.Error()}).Errorf("epoll accept conn")
+				s.log.WithFields(log.Fields{"err": err.Error()}).Errorf("Epoll accept conn")
 				continue
 			}
 
@@ -144,12 +144,12 @@ func (s *ServerEpoll) epollAccept(ctx app.Context) {
 						if err2 := s.epoll.Close(conn); err2 != nil {
 							s.log.WithFields(log.Fields{
 								"err": err2.Error(), "ip": conn.Conn.RemoteAddr().String(),
-							}).Errorf("epoll add conn")
+							}).Errorf("Epoll add conn")
 						}
 						if err1 != io.EOF {
 							s.log.WithFields(log.Fields{
 								"err": err1.Error(), "ip": conn.Conn.RemoteAddr().String(),
-							}).Errorf("epoll bad conn")
+							}).Errorf("Epoll bad conn")
 						}
 					}
 				}(c)
@@ -289,7 +289,7 @@ func (v *epoll) Wait() (epollNetSlice, error) {
 			if err = v.removeFD(fd); err != nil {
 				v.log.WithFields(log.Fields{
 					"err": err.Error(), "fd": fd,
-				}).Errorf("close fd")
+				}).Errorf("Close fd")
 			}
 			continue
 		}
@@ -303,7 +303,7 @@ func (v *epoll) Wait() (epollNetSlice, error) {
 			v.nets = append(v.nets, conn)
 		default:
 			if err = v.Close(conn); err != nil {
-				v.log.WithFields(log.Fields{"err": err.Error()}).Errorf("epoll close connect")
+				v.log.WithFields(log.Fields{"err": err.Error()}).Errorf("Epoll close connect")
 			}
 		}
 	}

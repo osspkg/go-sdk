@@ -89,7 +89,7 @@ func (s *_serv) AddAndRun(v interface{}) error {
 	}
 
 	if !isService(v) {
-		return errors.Wrapf(errServiceUnknown, "service <%T>", v)
+		return errors.Wrapf(errServiceUnknown, "service [%T]", v)
 	}
 
 	if s.tree == nil {
@@ -157,17 +157,17 @@ func (s *_serv) Down() (er error) {
 		if vv, ok := s.tree.Current.(ServiceContextInterface); ok {
 			if err := vv.Down(); err != nil {
 				er = errors.Wrap(er,
-					errors.Wrapf(err, "down <%T> service error", s.tree.Current),
+					errors.Wrapf(err, "down [%T] service error", s.tree.Current),
 				)
 			}
 		} else if vv, ok := s.tree.Current.(ServiceInterface); ok {
 			if err := vv.Down(); err != nil {
 				er = errors.Wrap(er,
-					errors.Wrapf(err, "down <%T> service error", s.tree.Current),
+					errors.Wrapf(err, "down [%T] service error", s.tree.Current),
 				)
 			}
 		} else {
-			return errors.Wrapf(errServiceUnknown, "service <%T>", s.tree.Current)
+			return errors.Wrapf(errServiceUnknown, "service [%T]", s.tree.Current)
 		}
 		if s.tree.Previous == nil {
 			break

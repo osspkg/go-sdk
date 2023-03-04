@@ -15,7 +15,7 @@ func RecoveryMiddleware(l log.Logger) func(
 			defer func() {
 				if err := recover(); err != nil {
 					if l != nil {
-						l.WithFields(log.Fields{"err": err}).Errorf("recovered")
+						l.WithFields(log.Fields{"err": err}).Errorf("Recovered")
 					}
 					w.WriteHeader(http.StatusInternalServerError)
 				}

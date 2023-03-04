@@ -88,7 +88,7 @@ func (s *ServerHttp) Up(ctx application.Context) error {
 
 	s.log.WithFields(log.Fields{
 		"ip": s.conf.Addr,
-	}).Infof("http server started")
+	}).Infof("HTTP server started")
 
 	s.wg.Add(1)
 	go func() {
@@ -96,13 +96,13 @@ func (s *ServerHttp) Up(ctx application.Context) error {
 		if err = s.serv.Serve(nl); err != nil && err != http.ErrServerClosed {
 			s.log.WithFields(log.Fields{
 				"err": err.Error(), "ip": s.conf.Addr,
-			}).Errorf("http server stopped")
+			}).Errorf("HTTP server stopped")
 			ctx.Close()
 			return
 		}
 		s.log.WithFields(log.Fields{
 			"ip": s.conf.Addr,
-		}).Infof("http server stopped")
+		}).Infof("HTTP server stopped")
 	}()
 	return nil
 }
