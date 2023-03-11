@@ -5,6 +5,8 @@ import (
 	"strings"
 )
 
+const anyPath = "#"
+
 type ctrlHandler struct {
 	list        map[string]*ctrlHandler
 	methods     map[string]func(http.ResponseWriter, *http.Request)
@@ -32,6 +34,9 @@ func (v *ctrlHandler) append(path string) *ctrlHandler {
 }
 
 func (v *ctrlHandler) next(path string, vars uriParamData) *ctrlHandler {
+	if uh, ok := v.list[anyPath]; ok {
+		return uh
+	}
 	if uh, ok := v.list[path]; ok {
 		return uh
 	}
