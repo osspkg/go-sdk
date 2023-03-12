@@ -33,21 +33,21 @@ func (v *ctrlHandler) append(path string) *ctrlHandler {
 	return uh
 }
 
-func (v *ctrlHandler) next(path string, vars uriParamData) *ctrlHandler {
+func (v *ctrlHandler) next(path string, vars uriParamData) (*ctrlHandler, bool) {
 	if uh, ok := v.list[anyPath]; ok {
-		return uh
+		return uh, true
 	}
 	if uh, ok := v.list[path]; ok {
-		return uh
+		return uh, false
 	}
 	uri, ok := v.matcher.Match(path, vars)
 	if !ok {
-		return nil
+		return nil, false
 	}
 	if uh, ok := v.list[uri]; ok {
-		return uh
+		return uh, false
 	}
-	return nil
+	return nil, false
 }
 
 // Route add new route
@@ -92,9 +92,13 @@ func (v *ctrlHandler) Match(path string, method string) (
 	midd := append(make([]func(func(http.ResponseWriter, *http.Request)) func(http.ResponseWriter, *http.Request),
 		0, len(uh.middlewares)), uh.middlewares...)
 	vr := uriParamData{}
+	var isBreak bool
 	for _, uri := range uris {
-		if uh = uh.next(uri, vr); uh != nil {
+		if uh, isBreak = uh.next(uri, vr); uh != nil {
 			midd = append(midd, uh.middlewares...)
+			if isBreak {
+				break
+			}
 			continue
 		}
 		if v.notFound != nil {
