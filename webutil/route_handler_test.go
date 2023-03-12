@@ -68,7 +68,7 @@ func TestUnit_NewHandler2(t *testing.T) {
 
 	h.Middlewares("/api/v{id}", RecoveryMiddleware(nil))
 
-	code, ctrl, vr, midd := h.Match("/api/v1/data/user", http.MethodGet)
+	code, ctrl, vr, midd := h.Match("/api/v1/data/user/aaaa", http.MethodGet)
 	require.Equal(t, http.StatusOK, code)
 	require.NotNil(t, ctrl)
 	require.Equal(t, 1, len(midd))
