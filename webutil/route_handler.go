@@ -34,18 +34,16 @@ func (v *ctrlHandler) append(path string) *ctrlHandler {
 }
 
 func (v *ctrlHandler) next(path string, vars uriParamData) (*ctrlHandler, bool) {
-	if uh, ok := v.list[anyPath]; ok {
-		return uh, true
-	}
 	if uh, ok := v.list[path]; ok {
 		return uh, false
 	}
-	uri, ok := v.matcher.Match(path, vars)
-	if !ok {
-		return nil, false
+	if uri, ok := v.matcher.Match(path, vars); ok {
+		if uh, ok1 := v.list[uri]; ok1 {
+			return uh, false
+		}
 	}
-	if uh, ok := v.list[uri]; ok {
-		return uh, false
+	if uh, ok := v.list[anyPath]; ok {
+		return uh, true
 	}
 	return nil, false
 }
