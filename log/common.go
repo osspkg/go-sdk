@@ -36,6 +36,8 @@ type Writer interface {
 }
 
 type WriterContext interface {
+	WithError(key string, err error) Writer
+	WithField(key string, value interface{}) Writer
 	WithFields(Fields) Writer
 	Writer
 }

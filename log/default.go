@@ -58,3 +58,13 @@ func Fatalf(format string, args ...interface{}) {
 func WithFields(v Fields) Writer {
 	return std.WithFields(v)
 }
+
+// WithError setter context to log message
+func WithError(key string, err error) Writer {
+	return std.WithError(key, err)
+}
+
+// WithField setter context to log message
+func WithField(key string, value interface{}) Writer {
+	return std.WithField(key, value)
+}
