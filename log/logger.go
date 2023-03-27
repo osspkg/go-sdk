@@ -145,3 +145,13 @@ func (l *log) Fatalf(format string, args ...interface{}) {
 func (l *log) WithFields(v Fields) Writer {
 	return l.getEntity().WithFields(v)
 }
+
+// WithError setter context to log message
+func (l *log) WithError(key string, err error) Writer {
+	return l.getEntity().WithError(key, err)
+}
+
+// WithField setter context to log message
+func (l *log) WithField(key string, value interface{}) Writer {
+	return l.getEntity().WithField(key, value)
+}

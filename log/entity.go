@@ -22,6 +22,28 @@ func (e *entity) Reset() {
 	e.ctx = Fields{}
 }
 
+func (e *entity) WithError(key string, err error) Writer {
+	if err != nil {
+		e.ctx[key] = err.Error()
+	} else {
+		e.ctx[key] = nil
+	}
+	return e
+}
+
+func (e *entity) WithField(key string, value interface{}) Writer {
+	ref := reflect.TypeOf(value)
+	if ref != nil {
+		switch ref.Kind() {
+		case reflect.Chan, reflect.Func, reflect.Interface, reflect.Ptr, reflect.Struct:
+			e.ctx[key] = fmt.Sprintf("unsupported field value: %#v", value)
+			return e
+		}
+	}
+	e.ctx[key] = value
+	return e
+}
+
 func (e *entity) WithFields(fields Fields) Writer {
 	for key, value := range fields {
 		ref := reflect.TypeOf(value)

@@ -1,6 +1,7 @@
 package log_test
 
 import (
+	"fmt"
 	"io"
 	"os"
 	"sync"
@@ -25,13 +26,22 @@ func TestUnit_New(t *testing.T) {
 	go log.Warnf("async %d", 2)
 	go log.Errorf("async %d", 3)
 	go log.Debugf("async %d", 4)
+
 	log.Infof("sync %d", 1)
 	log.Warnf("sync %d", 2)
 	log.Errorf("sync %d", 3)
 	log.Debugf("sync %d", 4)
+
 	log.WithFields(log.Fields{"ip": "0.0.0.0"}).Infof("context1")
 	log.WithFields(log.Fields{"nil": nil}).Infof("context2")
 	log.WithFields(log.Fields{"func": func() {}}).Infof("context3")
+
+	log.WithField("ip", "0.0.0.0").Infof("context4")
+	log.WithField("nil", nil).Infof("context5")
+	log.WithField("func", func() {}).Infof("context6")
+
+	log.WithError("err", nil).Infof("context7")
+	log.WithError("err", fmt.Errorf("er1")).Infof("context8")
 
 	<-time.After(time.Second * 1)
 	log.Close()
@@ -52,6 +62,11 @@ func TestUnit_New(t *testing.T) {
 	require.Contains(t, sdata, `"msg":"context1","ctx":{"ip":"0.0.0.0"}`)
 	require.Contains(t, sdata, `"msg":"context2","ctx":{"nil":null}`)
 	require.Contains(t, sdata, `"msg":"context3","ctx":{"func":"unsupported field value: (func())`)
+	require.Contains(t, sdata, `"msg":"context4","ctx":{"ip":"0.0.0.0"}`)
+	require.Contains(t, sdata, `"msg":"context5","ctx":{"nil":null}`)
+	require.Contains(t, sdata, `"msg":"context6","ctx":{"func":"unsupported field value: (func())`)
+	require.Contains(t, sdata, `"msg":"context7","ctx":{"err":null}`)
+	require.Contains(t, sdata, `"msg":"context8","ctx":{"err":"er1"}`)
 }
 
 func BenchmarkNew(b *testing.B) {
@@ -67,6 +82,8 @@ func BenchmarkNew(b *testing.B) {
 		wg.Add(1)
 		for p.Next() {
 			ll.WithFields(log.Fields{"a": "b"}).Infof("hello")
+			ll.WithField("a", "b").Infof("hello")
+			ll.WithError("a", fmt.Errorf("b")).Infof("hello")
 		}
 		wg.Done()
 	})
