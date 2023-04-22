@@ -1,4 +1,4 @@
-package auth
+package oauth
 
 //go:generate easyjson
 
@@ -66,7 +66,7 @@ func (v *IspYandex) Code() string {
 	return CodeYandex
 }
 
-func (v *IspYandex) Config(c ConfigOAuthItem) {
+func (v *IspYandex) Config(c ConfigItem) {
 	v.oauth = &oauth2.Config{
 		ClientID:     c.ClientID,
 		ClientSecret: c.ClientSecret,
@@ -93,7 +93,7 @@ func (v *IspYandex) AuthCodeKey() string {
 	return v.config.AuthCodeKey
 }
 
-func (v *IspYandex) Exchange(ctx context.Context, code string) (UserOAuth, error) {
+func (v *IspYandex) Exchange(ctx context.Context, code string) (User, error) {
 	m := &UserYandex{}
 	if err := oauth2ExchangeContext(ctx, code, v.config.RequestURL, v.oauth, m); err != nil {
 		return nil, err

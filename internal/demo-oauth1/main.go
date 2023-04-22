@@ -6,14 +6,14 @@ import (
 	"time"
 
 	"github.com/deweppro/go-sdk/app"
-	"github.com/deweppro/go-sdk/auth"
+	"github.com/deweppro/go-sdk/auth/oauth"
 	"github.com/deweppro/go-sdk/log"
 	"github.com/deweppro/go-sdk/webutil"
 )
 
 var (
-	provConf = &auth.ConfigOAuth{
-		Provider: []auth.ConfigOAuthItem{
+	provConf = &oauth.Config{
+		Provider: []oauth.ConfigItem{
 			{
 				Code:         "google",
 				ClientID:     "****************.apps.googleusercontent.com",
@@ -28,11 +28,11 @@ var (
 
 func main() {
 	ctx := app.NewContext()
-	authServ := auth.NewOAuth(provConf)
+	authServ := oauth.New(provConf)
 
 	route := webutil.NewRouter()
-	route.Route("/oauth/request/google", authServ.Request(auth.CodeGoogle), http.MethodGet)
-	route.Route("/oauth/callback/google", authServ.CallBack(auth.CodeGoogle, oauthCallBackHandler), http.MethodGet)
+	route.Route("/oauth/request/google", authServ.Request(oauth.CodeGoogle), http.MethodGet)
+	route.Route("/oauth/callback/google", authServ.CallBack(oauth.CodeGoogle, oauthCallBackHandler), http.MethodGet)
 
 	serv := webutil.NewServerHttp(servConf, route, log.Default())
 	serv.Up(ctx) //nolint: errcheck
@@ -47,7 +47,7 @@ name:  %s
 ico:   %s
 `
 
-func oauthCallBackHandler(w http.ResponseWriter, _ *http.Request, u auth.UserOAuth) {
+func oauthCallBackHandler(w http.ResponseWriter, _ *http.Request, u oauth.User) {
 	w.WriteHeader(200)
 	fmt.Fprintf(w, out, u.GetEmail(), u.GetName(), u.GetIcon())
 }
