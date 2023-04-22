@@ -1,4 +1,4 @@
-package auth
+package oauth
 
 import (
 	"net/http"
@@ -8,15 +8,15 @@ import (
 /**********************************************************************************************************************/
 
 type (
-	ConfigOAuthItem struct {
+	ConfigItem struct {
 		Code         string `yaml:"code"`
 		ClientID     string `yaml:"client_id"`
 		ClientSecret string `yaml:"client_secret"`
 		RedirectURL  string `yaml:"redirect_url"`
 	}
 
-	ConfigOAuth struct {
-		Provider []ConfigOAuthItem `yaml:"oauth"`
+	Config struct {
+		Provider []ConfigItem `yaml:"oauth"`
 	}
 
 	configIsp struct {
@@ -30,18 +30,18 @@ type (
 
 type (
 	OAuth struct {
-		config *ConfigOAuth
-		list   map[string]OAuthProvider
+		config *Config
+		list   map[string]Provider
 		mux    sync.RWMutex
 	}
 
-	CallBackOAuth func(http.ResponseWriter, *http.Request, UserOAuth)
+	CallBack func(http.ResponseWriter, *http.Request, User)
 )
 
-func NewOAuth(c *ConfigOAuth) *OAuth {
+func New(c *Config) *OAuth {
 	return &OAuth{
 		config: c,
-		list:   make(map[string]OAuthProvider),
+		list:   make(map[string]Provider),
 	}
 }
 
@@ -69,7 +69,7 @@ func (v *OAuth) Request(name string) func(http.ResponseWriter, *http.Request) {
 	}
 }
 
-func (v *OAuth) CallBack(name string, call CallBackOAuth) func(w http.ResponseWriter, r *http.Request) {
+func (v *OAuth) CallBack(name string, call CallBack) func(w http.ResponseWriter, r *http.Request) {
 	p, err := v.GetProvider(name)
 	if err != nil {
 		return func(w http.ResponseWriter, _ *http.Request) {

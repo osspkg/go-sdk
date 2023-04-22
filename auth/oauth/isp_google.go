@@ -1,4 +1,4 @@
-package auth
+package oauth
 
 //go:generate easyjson
 
@@ -66,7 +66,7 @@ func (v *IspGoogle) Code() string {
 	return CodeGoogle
 }
 
-func (v *IspGoogle) Config(c ConfigOAuthItem) {
+func (v *IspGoogle) Config(c ConfigItem) {
 	v.oauth = &oauth2.Config{
 		ClientID:     c.ClientID,
 		ClientSecret: c.ClientSecret,
@@ -92,7 +92,7 @@ func (v *IspGoogle) AuthCodeKey() string {
 	return v.config.AuthCodeKey
 }
 
-func (v *IspGoogle) Exchange(ctx context.Context, code string) (UserOAuth, error) {
+func (v *IspGoogle) Exchange(ctx context.Context, code string) (User, error) {
 	m := &UserGoogle{}
 	if err := oauth2ExchangeContext(ctx, code, v.config.RequestURL, v.oauth, m); err != nil {
 		return nil, err

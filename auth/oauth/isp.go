@@ -1,4 +1,4 @@
-package auth
+package oauth
 
 import (
 	"context"
@@ -15,22 +15,22 @@ var (
 )
 
 type (
-	UserOAuth interface {
+	User interface {
 		GetName() string
 		GetEmail() string
 		GetIcon() string
 	}
 
-	OAuthProvider interface {
+	Provider interface {
 		Code() string
-		Config(conf ConfigOAuthItem)
+		Config(conf ConfigItem)
 		AuthCodeURL() string
 		AuthCodeKey() string
-		Exchange(ctx context.Context, code string) (UserOAuth, error)
+		Exchange(ctx context.Context, code string) (User, error)
 	}
 )
 
-func (v *OAuth) AddProviders(p ...OAuthProvider) {
+func (v *OAuth) AddProviders(p ...Provider) {
 	v.mux.Lock()
 	defer v.mux.Unlock()
 
@@ -44,7 +44,7 @@ func (v *OAuth) AddProviders(p ...OAuthProvider) {
 	}
 }
 
-func (v *OAuth) GetProvider(name string) (OAuthProvider, error) {
+func (v *OAuth) GetProvider(name string) (Provider, error) {
 	v.mux.RLock()
 	defer v.mux.RUnlock()
 
