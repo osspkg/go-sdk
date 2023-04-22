@@ -4,6 +4,8 @@ import (
 	"context"
 	"database/sql"
 	"sync"
+
+	"github.com/deweppro/go-sdk/orm/schema"
 )
 
 var poolExec = sync.Pool{New: func() interface{} { return &exec{} }}
@@ -52,11 +54,11 @@ type (
 // ExecContext ...
 func (s *_stmt) ExecContext(name string, ctx context.Context, call func(q Executor)) error {
 	return s.CallContext(name, ctx, func(ctx context.Context, db *sql.DB) error {
-		return callExecContext(ctx, db, call)
+		return callExecContext(ctx, db, call, s.db.Dialect())
 	})
 }
 
-func callExecContext(ctx context.Context, db dbGetter, call func(q Executor)) error {
+func callExecContext(ctx context.Context, db dbGetter, call func(q Executor), dialect string) error {
 	q, ok := poolExec.Get().(*exec)
 	if !ok {
 		return errInvalidModelPool
@@ -85,11 +87,14 @@ func callExecContext(ctx context.Context, db dbGetter, call func(q Executor)) er
 			return err0
 		}
 		total.RowsAffected += rows
-		rows, err0 = result.LastInsertId()
-		if err0 != nil {
-			return err0
+
+		if dialect != schema.PgSQLDialect {
+			rows, err0 = result.LastInsertId()
+			if err0 != nil {
+				return err0
+			}
+			total.LastInsertId = rows
 		}
-		total.LastInsertId = rows
 	}
 	if err = stmt.Close(); err != nil {
 		return err

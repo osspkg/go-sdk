@@ -54,7 +54,7 @@ func (s *_stmt) TransactionContext(name string, ctx context.Context, call func(v
 	return s.TxContext(name, ctx, func(ctx context.Context, tx *sql.Tx) error {
 		for i, c := range q.v {
 			if cc, ok := c.(func(q Executor)); ok {
-				if err := callExecContext(ctx, tx, cc); err != nil {
+				if err := callExecContext(ctx, tx, cc, s.db.Dialect()); err != nil {
 					return err
 				}
 				continue
