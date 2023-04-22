@@ -95,7 +95,7 @@ func (i Item) GetDSN() string {
 	if i.Timeout == 0 {
 		i.Timeout = defaultTimeoutConn
 	}
-	params.Add("connect_timeout", i.Timeout.String())
+	params.Add("connect_timeout", fmt.Sprintf("%.0f", i.Timeout.Seconds()))
 	//---
 	if len(i.AppName) == 0 {
 		i.AppName = "go_app"
