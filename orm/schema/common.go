@@ -14,6 +14,7 @@ var (
 const (
 	MySQLDialect  = "mysql"
 	SQLiteDialect = "sqlite"
+	PgSQLDialect  = "pgsql"
 )
 
 type (
