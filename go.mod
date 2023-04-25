@@ -4,7 +4,7 @@ go 1.17
 
 require (
 	github.com/deweppro/go-algorithms v1.2.1
-	github.com/go-sql-driver/mysql v1.7.0
+	github.com/go-sql-driver/mysql v1.7.1
 	github.com/lib/pq v1.10.8
 	github.com/mailru/easyjson v0.7.7
 	github.com/mattn/go-sqlite3 v1.14.16
