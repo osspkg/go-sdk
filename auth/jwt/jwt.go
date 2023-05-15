@@ -12,6 +12,8 @@ import (
 	"hash"
 	"strings"
 	"time"
+
+	"github.com/deweppro/go-sdk/encryption/aesgcm"
 )
 
 const (
@@ -40,9 +42,10 @@ type (
 	}
 
 	Pool struct {
-		conf Config
-		hash func() hash.Hash
-		key  []byte
+		conf  Config
+		hash  func() hash.Hash
+		key   []byte
+		codec *aesgcm.Codec
 	}
 )
 
@@ -61,7 +64,11 @@ func New(conf []Config) (*JWT, error) {
 		default:
 			return nil, fmt.Errorf("jwt algorithm not supported")
 		}
-		obj.pool[c.ID] = &Pool{conf: c, hash: h, key: []byte(c.Key)}
+		codec, err := aesgcm.New(c.Key)
+		if err != nil {
+			return nil, fmt.Errorf("jwt init codec: %w", err)
+		}
+		obj.pool[c.ID] = &Pool{conf: c, hash: h, key: []byte(c.Key), codec: codec}
 	}
 
 	return obj, nil
@@ -110,6 +117,10 @@ func (v *JWT) Sign(payload interface{}, ttl time.Duration) (string, error) {
 	result := base64.StdEncoding.EncodeToString(h)
 
 	p, err := json.Marshal(payload)
+	if err != nil {
+		return "", err
+	}
+	p, err = pool.codec.Encrypt(p)
 	if err != nil {
 		return "", err
 	}
@@ -167,7 +178,10 @@ func (v *JWT) Verify(token string, payload interface{}) (*Header, error) {
 	if err != nil {
 		return nil, err
 	}
-
+	p, err = pool.codec.Decrypt(p)
+	if err != nil {
+		return nil, err
+	}
 	if err = json.Unmarshal(p, payload); err != nil {
 		return nil, err
 	}
