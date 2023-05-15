@@ -14,7 +14,7 @@ type demoJwtPayload struct {
 
 func TestUnit_NewJWT(t *testing.T) {
 	conf := make([]jwt.Config, 0)
-	conf = append(conf, jwt.Config{ID: "789456", Key: "123456789123456789123456789", Algorithm: jwt.AlgHS256})
+	conf = append(conf, jwt.Config{ID: "789456", Key: "123456789123456789123456789123456789", Algorithm: jwt.AlgHS256})
 	j, err := jwt.New(conf)
 	require.NoError(t, err)
 
