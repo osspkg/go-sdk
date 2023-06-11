@@ -1,4 +1,4 @@
-package file
+package iofile
 
 import (
 	"encoding/hex"
@@ -47,7 +47,7 @@ func Rewrite(filename string, call func([]byte) ([]byte, error)) error {
 	return os.WriteFile(filename, b, perm)
 }
 
-func CheckHash(filename string, h hash.Hash, valid string) error {
+func IsValidHash(filename string, h hash.Hash, valid string) error {
 	r, err := os.Open(filename)
 	if err != nil {
 		return err
@@ -63,7 +63,7 @@ func CheckHash(filename string, h hash.Hash, valid string) error {
 	return nil
 }
 
-func CalcHash(filename string, h hash.Hash) (string, error) {
+func Hash(filename string, h hash.Hash) (string, error) {
 	r, err := os.Open(filename)
 	if err != nil {
 		return "", err
