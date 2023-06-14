@@ -17,7 +17,7 @@ var (
 	_ easyjson.Marshaler
 )
 
-func easyjsonD1fc6ea8DecodeGithubComDewepproGoSdkAuthOauth(in *jlexer.Lexer, out *modelYandex) {
+func easyjsonD1fc6ea8DecodeGithubComosspkgGoSdkAuthOauth(in *jlexer.Lexer, out *modelYandex) {
 	isTopLevel := in.IsStart()
 	if in.IsNull() {
 		if isTopLevel {
@@ -52,7 +52,7 @@ func easyjsonD1fc6ea8DecodeGithubComDewepproGoSdkAuthOauth(in *jlexer.Lexer, out
 		in.Consumed()
 	}
 }
-func easyjsonD1fc6ea8EncodeGithubComDewepproGoSdkAuthOauth(out *jwriter.Writer, in modelYandex) {
+func easyjsonD1fc6ea8EncodeGithubComosspkgGoSdkAuthOauth(out *jwriter.Writer, in modelYandex) {
 	out.RawByte('{')
 	first := true
 	_ = first
@@ -77,23 +77,23 @@ func easyjsonD1fc6ea8EncodeGithubComDewepproGoSdkAuthOauth(out *jwriter.Writer, 
 // MarshalJSON supports json.Marshaler interface
 func (v modelYandex) MarshalJSON() ([]byte, error) {
 	w := jwriter.Writer{}
-	easyjsonD1fc6ea8EncodeGithubComDewepproGoSdkAuthOauth(&w, v)
+	easyjsonD1fc6ea8EncodeGithubComosspkgGoSdkAuthOauth(&w, v)
 	return w.Buffer.BuildBytes(), w.Error
 }
 
 // MarshalEasyJSON supports easyjson.Marshaler interface
 func (v modelYandex) MarshalEasyJSON(w *jwriter.Writer) {
-	easyjsonD1fc6ea8EncodeGithubComDewepproGoSdkAuthOauth(w, v)
+	easyjsonD1fc6ea8EncodeGithubComosspkgGoSdkAuthOauth(w, v)
 }
 
 // UnmarshalJSON supports json.Unmarshaler interface
 func (v *modelYandex) UnmarshalJSON(data []byte) error {
 	r := jlexer.Lexer{Data: data}
-	easyjsonD1fc6ea8DecodeGithubComDewepproGoSdkAuthOauth(&r, v)
+	easyjsonD1fc6ea8DecodeGithubComosspkgGoSdkAuthOauth(&r, v)
 	return r.Error()
 }
 
 // UnmarshalEasyJSON supports easyjson.Unmarshaler interface
 func (v *modelYandex) UnmarshalEasyJSON(l *jlexer.Lexer) {
-	easyjsonD1fc6ea8DecodeGithubComDewepproGoSdkAuthOauth(l, v)
+	easyjsonD1fc6ea8DecodeGithubComosspkgGoSdkAuthOauth(l, v)
 }

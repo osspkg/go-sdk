@@ -1,6 +1,6 @@
 package app
 
-import "github.com/deweppro/go-sdk/errors"
+import "github.com/osspkg/go-sdk/errors"
 
 var (
 	errDepBuilderNotRunning = errors.New("dependencies builder is not running")

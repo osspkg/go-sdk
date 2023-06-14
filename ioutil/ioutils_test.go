@@ -6,8 +6,8 @@ import (
 	"reflect"
 	"testing"
 
-	"github.com/deweppro/go-sdk/errors"
-	"github.com/deweppro/go-sdk/ioutil"
+	"github.com/osspkg/go-sdk/errors"
+	"github.com/osspkg/go-sdk/ioutil"
 )
 
 type mockReadCloser struct {

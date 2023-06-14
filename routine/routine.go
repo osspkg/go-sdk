@@ -5,7 +5,7 @@ import (
 	"sync"
 	"time"
 
-	"github.com/deweppro/go-sdk/errors"
+	"github.com/osspkg/go-sdk/errors"
 )
 
 func Interval(ctx context.Context, interval time.Duration, call func(context.Context)) {

@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"testing"
 
-	"github.com/deweppro/go-sdk/domain"
+	"github.com/osspkg/go-sdk/domain"
 )
 
 func TestUnit_Level(t *testing.T) {

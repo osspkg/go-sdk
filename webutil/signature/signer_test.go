@@ -3,7 +3,7 @@ package signature_test
 import (
 	"testing"
 
-	"github.com/deweppro/go-sdk/webutil/signature"
+	"github.com/osspkg/go-sdk/webutil/signature"
 	"github.com/stretchr/testify/require"
 )
 

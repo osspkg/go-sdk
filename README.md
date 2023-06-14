@@ -1,14 +1,14 @@
 # go-sdk
 
-[![Coverage Status](https://coveralls.io/repos/github/deweppro/go-sdk/badge.svg?branch=master)](https://coveralls.io/github/deweppro/go-sdk?branch=master)
-[![Release](https://img.shields.io/github/release/deweppro/go-sdk.svg?style=flat-square)](https://github.com/deweppro/go-sdk/releases/latest)
-[![Go Report Card](https://goreportcard.com/badge/github.com/deweppro/go-sdk)](https://goreportcard.com/report/github.com/deweppro/go-sdk)
-[![CI](https://github.com/deweppro/go-sdk/actions/workflows/ci.yml/badge.svg)](https://github.com/deweppro/go-sdk/actions/workflows/ci.yml)
+[![Coverage Status](https://coveralls.io/repos/github/osspkg/go-sdk/badge.svg?branch=master)](https://coveralls.io/github/osspkg/go-sdk?branch=master)
+[![Release](https://img.shields.io/github/release/osspkg/go-sdk.svg?style=flat-square)](https://github.com/osspkg/go-sdk/releases/latest)
+[![Go Report Card](https://goreportcard.com/badge/github.com/osspkg/go-sdk)](https://goreportcard.com/report/github.com/osspkg/go-sdk)
+[![CI](https://github.com/osspkg/go-sdk/actions/workflows/ci.yml/badge.svg)](https://github.com/osspkg/go-sdk/actions/workflows/ci.yml)
 
 ## Install
 
 ```shell
-go get -u github.com/deweppro/go-sdk
+go get -u github.com/osspkg/go-sdk
 ```
 
 ## Docs

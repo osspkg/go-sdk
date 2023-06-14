@@ -5,7 +5,7 @@ import (
 	"os"
 	"path/filepath"
 
-	"github.com/deweppro/go-sdk/errors"
+	"github.com/osspkg/go-sdk/errors"
 	"gopkg.in/yaml.v3"
 )
 

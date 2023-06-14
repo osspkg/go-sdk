@@ -3,7 +3,7 @@ package ioutil
 import (
 	"io"
 
-	"github.com/deweppro/go-sdk/errors"
+	"github.com/osspkg/go-sdk/errors"
 )
 
 func ReadAll(r io.ReadCloser) ([]byte, error) {

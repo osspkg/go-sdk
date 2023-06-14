@@ -5,7 +5,7 @@ import (
 	"crypto"
 	"testing"
 
-	"github.com/deweppro/go-sdk/certificate/pgp"
+	"github.com/osspkg/go-sdk/certificate/pgp"
 )
 
 func TestUnit_PGP(t *testing.T) {

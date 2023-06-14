@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"testing"
 
-	"github.com/deweppro/go-sdk/random"
+	"github.com/osspkg/go-sdk/random"
 )
 
 func TestUnit_Bytes(t *testing.T) {

@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"testing"
 
-	"github.com/deweppro/go-sdk/routine"
+	"github.com/osspkg/go-sdk/routine"
 )
 
 func TestUnit_Parallel(t *testing.T) {

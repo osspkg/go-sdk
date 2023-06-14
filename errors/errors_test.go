@@ -5,7 +5,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/deweppro/go-sdk/errors"
+	"github.com/osspkg/go-sdk/errors"
 )
 
 func TestUnit_New(t *testing.T) {
@@ -238,7 +238,7 @@ func TestUnit_Trace(t *testing.T) {
 		err  error
 		want string
 	}{
-		{name: "Case1", err: errors.New("test"), want: "[trace] github.com/deweppro/go-sdk/errors_test.TestUnit_Trace.func1"},
+		{name: "Case1", err: errors.New("test"), want: "[trace] github.com/osspkg/go-sdk/errors_test.TestUnit_Trace.func1"},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {

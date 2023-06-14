@@ -25,8 +25,8 @@ package main
 import (
 	"fmt"
 
-	"github.com/deweppro/go-sdk/app"
-	"github.com/deweppro/go-sdk/log"
+	"github.com/osspkg/go-sdk/app"
+	"github.com/osspkg/go-sdk/log"
 )
 
 type (

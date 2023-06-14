@@ -3,7 +3,7 @@ package acl_test
 import (
 	"testing"
 
-	acl2 "github.com/deweppro/go-sdk/acl"
+	acl2 "github.com/osspkg/go-sdk/acl"
 	"github.com/stretchr/testify/require"
 )
 

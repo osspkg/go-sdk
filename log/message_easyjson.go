@@ -17,7 +17,7 @@ var (
 	_ easyjson.Marshaler
 )
 
-func easyjson4086215fDecodeGithubComDewepproGoSdkLog(in *jlexer.Lexer, out *message) {
+func easyjson4086215fDecodeGithubComosspkgGoSdkLog(in *jlexer.Lexer, out *message) {
 	isTopLevel := in.IsStart()
 	if in.IsNull() {
 		if isTopLevel {
@@ -78,7 +78,7 @@ func easyjson4086215fDecodeGithubComDewepproGoSdkLog(in *jlexer.Lexer, out *mess
 		in.Consumed()
 	}
 }
-func easyjson4086215fEncodeGithubComDewepproGoSdkLog(out *jwriter.Writer, in message) {
+func easyjson4086215fEncodeGithubComosspkgGoSdkLog(out *jwriter.Writer, in message) {
 	out.RawByte('{')
 	first := true
 	_ = first
@@ -128,23 +128,23 @@ func easyjson4086215fEncodeGithubComDewepproGoSdkLog(out *jwriter.Writer, in mes
 // MarshalJSON supports json.Marshaler interface
 func (v message) MarshalJSON() ([]byte, error) {
 	w := jwriter.Writer{}
-	easyjson4086215fEncodeGithubComDewepproGoSdkLog(&w, v)
+	easyjson4086215fEncodeGithubComosspkgGoSdkLog(&w, v)
 	return w.Buffer.BuildBytes(), w.Error
 }
 
 // MarshalEasyJSON supports easyjson.Marshaler interface
 func (v message) MarshalEasyJSON(w *jwriter.Writer) {
-	easyjson4086215fEncodeGithubComDewepproGoSdkLog(w, v)
+	easyjson4086215fEncodeGithubComosspkgGoSdkLog(w, v)
 }
 
 // UnmarshalJSON supports json.Unmarshaler interface
 func (v *message) UnmarshalJSON(data []byte) error {
 	r := jlexer.Lexer{Data: data}
-	easyjson4086215fDecodeGithubComDewepproGoSdkLog(&r, v)
+	easyjson4086215fDecodeGithubComosspkgGoSdkLog(&r, v)
 	return r.Error()
 }
 
 // UnmarshalEasyJSON supports easyjson.Unmarshaler interface
 func (v *message) UnmarshalEasyJSON(l *jlexer.Lexer) {
-	easyjson4086215fDecodeGithubComDewepproGoSdkLog(l, v)
+	easyjson4086215fDecodeGithubComosspkgGoSdkLog(l, v)
 }

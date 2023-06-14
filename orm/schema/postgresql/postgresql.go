@@ -7,9 +7,9 @@ import (
 	"sync"
 	"time"
 
-	"github.com/deweppro/go-sdk/errors"
-	"github.com/deweppro/go-sdk/orm/schema"
 	_ "github.com/lib/pq" //nolint: golint
+	"github.com/osspkg/go-sdk/errors"
+	"github.com/osspkg/go-sdk/orm/schema"
 )
 
 const (

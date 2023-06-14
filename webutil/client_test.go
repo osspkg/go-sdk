@@ -6,7 +6,7 @@ import (
 	"net/http"
 	"testing"
 
-	"github.com/deweppro/go-sdk/webutil"
+	"github.com/osspkg/go-sdk/webutil"
 	"github.com/stretchr/testify/require"
 )
 

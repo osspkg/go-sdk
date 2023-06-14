@@ -3,9 +3,9 @@ package app
 import (
 	"os"
 
-	"github.com/deweppro/go-sdk/console"
-	"github.com/deweppro/go-sdk/log"
-	"github.com/deweppro/go-sdk/syscall"
+	"github.com/osspkg/go-sdk/console"
+	"github.com/osspkg/go-sdk/log"
+	"github.com/osspkg/go-sdk/syscall"
 )
 
 type (

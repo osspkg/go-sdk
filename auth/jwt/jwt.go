@@ -13,7 +13,7 @@ import (
 	"strings"
 	"time"
 
-	"github.com/deweppro/go-sdk/encryption/aesgcm"
+	"github.com/osspkg/go-sdk/encryption/aesgcm"
 )
 
 const (

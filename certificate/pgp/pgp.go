@@ -6,7 +6,7 @@ import (
 	"io"
 	"os"
 
-	"github.com/deweppro/go-sdk/errors"
+	"github.com/osspkg/go-sdk/errors"
 	"golang.org/x/crypto/openpgp"
 	"golang.org/x/crypto/openpgp/armor"
 	"golang.org/x/crypto/openpgp/clearsign"

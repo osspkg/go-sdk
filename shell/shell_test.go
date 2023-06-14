@@ -4,7 +4,7 @@ import (
 	"context"
 	"testing"
 
-	"github.com/deweppro/go-sdk/shell"
+	"github.com/osspkg/go-sdk/shell"
 )
 
 func TestUnit_ShellCall(t *testing.T) {

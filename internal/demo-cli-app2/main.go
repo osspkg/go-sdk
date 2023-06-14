@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/deweppro/go-sdk/console"
+	"github.com/osspkg/go-sdk/console"
 )
 
 func main() {

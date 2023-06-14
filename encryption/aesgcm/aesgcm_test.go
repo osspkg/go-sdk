@@ -3,8 +3,8 @@ package aesgcm_test
 import (
 	"testing"
 
-	"github.com/deweppro/go-sdk/encryption/aesgcm"
-	"github.com/deweppro/go-sdk/random"
+	"github.com/osspkg/go-sdk/encryption/aesgcm"
+	"github.com/osspkg/go-sdk/random"
 	"github.com/stretchr/testify/require"
 )
 

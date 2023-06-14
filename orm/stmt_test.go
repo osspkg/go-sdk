@@ -6,9 +6,9 @@ import (
 	"os"
 	"testing"
 
-	"github.com/deweppro/go-sdk/orm"
-	"github.com/deweppro/go-sdk/orm/plugins"
-	"github.com/deweppro/go-sdk/orm/schema/sqlite"
+	"github.com/osspkg/go-sdk/orm"
+	"github.com/osspkg/go-sdk/orm/plugins"
+	"github.com/osspkg/go-sdk/orm/schema/sqlite"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 )

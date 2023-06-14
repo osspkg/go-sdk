@@ -5,8 +5,8 @@ import (
 	"encoding/json"
 	"net/http"
 
-	"github.com/deweppro/go-sdk/errors"
-	"github.com/deweppro/go-sdk/ioutil"
+	"github.com/osspkg/go-sdk/errors"
+	"github.com/osspkg/go-sdk/ioutil"
 	"golang.org/x/oauth2"
 )
 

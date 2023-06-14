@@ -8,7 +8,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/deweppro/go-sdk/log"
+	"github.com/osspkg/go-sdk/log"
 	"github.com/stretchr/testify/require"
 )
 

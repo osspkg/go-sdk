@@ -6,7 +6,7 @@ import (
 	"fmt"
 	"net/http"
 
-	"github.com/deweppro/go-sdk/ioutil"
+	"github.com/osspkg/go-sdk/ioutil"
 )
 
 func JSONEncode(w http.ResponseWriter, v interface{}) {

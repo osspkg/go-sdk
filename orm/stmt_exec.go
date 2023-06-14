@@ -5,7 +5,7 @@ import (
 	"database/sql"
 	"sync"
 
-	"github.com/deweppro/go-sdk/orm/schema"
+	"github.com/osspkg/go-sdk/orm/schema"
 )
 
 var poolExec = sync.Pool{New: func() interface{} { return &exec{} }}

@@ -5,7 +5,7 @@ import (
 	"reflect"
 	"strings"
 
-	"github.com/deweppro/go-sdk/errors"
+	"github.com/osspkg/go-sdk/errors"
 )
 
 var (

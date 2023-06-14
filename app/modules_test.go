@@ -3,7 +3,7 @@ package app_test
 import (
 	"testing"
 
-	application "github.com/deweppro/go-sdk/app"
+	application "github.com/osspkg/go-sdk/app"
 	"github.com/stretchr/testify/require"
 )
 

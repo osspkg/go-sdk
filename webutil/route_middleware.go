@@ -3,7 +3,7 @@ package webutil
 import (
 	"net/http"
 
-	"github.com/deweppro/go-sdk/log"
+	"github.com/osspkg/go-sdk/log"
 )
 
 // RecoveryMiddleware recovery go panic and write to log

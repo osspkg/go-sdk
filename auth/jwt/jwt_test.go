@@ -4,7 +4,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/deweppro/go-sdk/auth/jwt"
+	"github.com/osspkg/go-sdk/auth/jwt"
 	"github.com/stretchr/testify/require"
 )
 

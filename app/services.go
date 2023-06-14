@@ -4,7 +4,7 @@ import (
 	"reflect"
 	"sync/atomic"
 
-	"github.com/deweppro/go-sdk/errors"
+	"github.com/osspkg/go-sdk/errors"
 )
 
 type (

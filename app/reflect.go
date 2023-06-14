@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"reflect"
 
-	"github.com/deweppro/go-sdk/random"
+	"github.com/osspkg/go-sdk/random"
 )
 
 var errType = reflect.TypeOf(new(error)).Elem()

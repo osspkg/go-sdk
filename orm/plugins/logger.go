@@ -1,7 +1,7 @@
 package plugins
 
 import (
-	"github.com/deweppro/go-sdk/log"
+	"github.com/osspkg/go-sdk/log"
 )
 
 var (

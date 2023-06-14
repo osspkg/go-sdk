@@ -5,8 +5,8 @@ import (
 	"reflect"
 	"sync"
 
-	"github.com/deweppro/go-algorithms/graph/kahn"
-	"github.com/deweppro/go-sdk/errors"
+	"github.com/osspkg/go-algorithms/graph/kahn"
+	"github.com/osspkg/go-sdk/errors"
 )
 
 type _dic struct {

@@ -11,8 +11,8 @@ import (
 	"net/url"
 	"time"
 
-	"github.com/deweppro/go-sdk/ioutil"
-	"github.com/deweppro/go-sdk/webutil/signature"
+	"github.com/osspkg/go-sdk/ioutil"
+	"github.com/osspkg/go-sdk/webutil/signature"
 )
 
 type (

@@ -1,9 +1,9 @@
 package orm
 
 import (
-	"github.com/deweppro/go-sdk/log"
-	"github.com/deweppro/go-sdk/orm/plugins"
-	"github.com/deweppro/go-sdk/orm/schema"
+	"github.com/osspkg/go-sdk/log"
+	"github.com/osspkg/go-sdk/orm/plugins"
+	"github.com/osspkg/go-sdk/orm/schema"
 )
 
 type (

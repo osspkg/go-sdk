@@ -4,7 +4,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/deweppro/go-sdk/certificate/x509"
+	"github.com/osspkg/go-sdk/certificate/x509"
 )
 
 func TestUnit_X509(t *testing.T) {

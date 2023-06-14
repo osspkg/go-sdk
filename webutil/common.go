@@ -4,7 +4,7 @@ import (
 	"strings"
 	"time"
 
-	"github.com/deweppro/go-sdk/errors"
+	"github.com/osspkg/go-sdk/errors"
 )
 
 const (

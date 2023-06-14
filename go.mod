@@ -1,13 +1,13 @@
-module github.com/deweppro/go-sdk
+module github.com/osspkg/go-sdk
 
 go 1.17
 
 require (
-	github.com/deweppro/go-algorithms v1.2.1
 	github.com/go-sql-driver/mysql v1.7.1
 	github.com/lib/pq v1.10.9
 	github.com/mailru/easyjson v0.7.7
 	github.com/mattn/go-sqlite3 v1.14.17
+	github.com/osspkg/go-algorithms v1.2.2
 	github.com/stretchr/testify v1.8.4
 	golang.org/x/crypto v0.9.0
 	golang.org/x/oauth2 v0.8.0

@@ -6,9 +6,9 @@ import (
 	"net/url"
 	"sync"
 
-	"github.com/deweppro/go-sdk/errors"
-	"github.com/deweppro/go-sdk/orm/schema"
 	_ "github.com/mattn/go-sqlite3" //nolint: golint
+	"github.com/osspkg/go-sdk/errors"
+	"github.com/osspkg/go-sdk/orm/schema"
 )
 
 var (

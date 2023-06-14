@@ -10,7 +10,7 @@ import (
 	"math/big"
 	"time"
 
-	"github.com/deweppro/go-sdk/errors"
+	"github.com/osspkg/go-sdk/errors"
 )
 
 type (

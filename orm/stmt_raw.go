@@ -4,7 +4,7 @@ import (
 	"context"
 	"database/sql"
 
-	"github.com/deweppro/go-sdk/errors"
+	"github.com/osspkg/go-sdk/errors"
 )
 
 // Ping database ping

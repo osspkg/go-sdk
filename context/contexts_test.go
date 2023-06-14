@@ -6,7 +6,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/deweppro/go-sdk/context"
+	"github.com/osspkg/go-sdk/context"
 )
 
 func TestUnit_Combine(t *testing.T) {

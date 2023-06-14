@@ -3,7 +3,7 @@ package app
 import (
 	"os"
 
-	"github.com/deweppro/go-sdk/log"
+	"github.com/osspkg/go-sdk/log"
 )
 
 type _log struct {
