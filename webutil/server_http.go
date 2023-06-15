@@ -93,7 +93,7 @@ func (s *ServerHttp) Up(ctx application.Context) error {
 	s.wg.Add(1)
 	go func() {
 		defer s.wg.Done()
-		if err = s.serv.Serve(nl); err != nil && err != http.ErrServerClosed {
+		if err = s.serv.Serve(nl); err != nil && errors.Is(err, http.ErrServerClosed) {
 			s.log.WithFields(log.Fields{
 				"err": err.Error(), "ip": s.conf.Addr,
 			}).Errorf("HTTP server stopped")

@@ -159,8 +159,6 @@ func TestUnit_Dependencies3(t *testing.T) {
 	require.Contains(t, err.Error(), "fail init constructor demo4")
 }
 
-type demo5 struct{}
-
 func newDemo5() error { return fmt.Errorf("fail init constructor newDemo5") }
 
 func TestUnit_Dependencies4(t *testing.T) {

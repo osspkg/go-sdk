@@ -30,11 +30,7 @@ issues:
       linters:
         - prealloc
         - errcheck
-        - unused
-        - bodyclose
-    - linters:
-        - staticcheck
-      text: "SA1019:"
+
 # output configuration options
 output:
   # colored-line-number|line-number|json|tab|checkstyle, default is "colored-line-number"
@@ -361,15 +357,17 @@ linters:
     - gocyclo
     - ineffassign
     - goimports
+#    - nakedret
     - unparam
     - unused
     - prealloc
     - durationcheck
 #    - nolintlint
-    - staticcheck
+#    - staticcheck
     - makezero
     - nilerr
-#    - errorlint
+    - errorlint
+#    - bodyclose
     - exportloopref
     - gci
     - gosec

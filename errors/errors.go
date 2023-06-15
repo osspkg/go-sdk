@@ -41,6 +41,7 @@ func (v *err) WithTrace() {
 
 func Trace(cause error, message string, args ...interface{}) error {
 	v := Wrapf(cause, message, args...)
+	//nolint: errorlint
 	if vv, ok := v.(*err); ok {
 		vv.WithTrace()
 		return vv
@@ -89,6 +90,7 @@ func Wrap(msg ...error) error {
 }
 
 func Unwrap(err error) error {
+	//nolint: errorlint
 	if v, ok := err.(interface {
 		Unwrap() error
 	}); ok {
@@ -99,6 +101,7 @@ func Unwrap(err error) error {
 
 func Cause(err error) error {
 	for err != nil {
+		//nolint: errorlint
 		v, ok := err.(interface {
 			Cause() error
 		})
