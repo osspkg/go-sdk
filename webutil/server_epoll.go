@@ -98,6 +98,7 @@ func (s *ServerEpoll) connAccept(ctx app.Context) {
 				return
 			default:
 				s.log.WithFields(log.Fields{"err": err.Error()}).Errorf("Epoll conn accept")
+				//nolint: errorlint
 				if err0, ok := err.(net.Error); ok && err0.Temporary() {
 					time.Sleep(1 * time.Second)
 					continue
@@ -124,11 +125,11 @@ func (s *ServerEpoll) epollAccept(ctx app.Context) {
 			return
 		default:
 			list, err := s.epoll.Wait()
-			switch err {
-			case nil:
-			case errEpollEmptyEvents:
+			switch true {
+			case err == nil:
+			case errors.Is(err, errEpollEmptyEvents):
 				continue
-			case unix.EINTR:
+			case errors.Is(err, unix.EINTR):
 				continue
 			default:
 				s.log.WithFields(log.Fields{"err": err.Error()}).Errorf("Epoll accept conn")
@@ -146,7 +147,7 @@ func (s *ServerEpoll) epollAccept(ctx app.Context) {
 								"err": err2.Error(), "ip": conn.Conn.RemoteAddr().String(),
 							}).Errorf("Epoll add conn")
 						}
-						if err1 != io.EOF {
+						if errors.Is(err1, io.EOF) {
 							s.log.WithFields(log.Fields{
 								"err": err1.Error(), "ip": conn.Conn.RemoteAddr().String(),
 							}).Errorf("Epoll bad conn")
@@ -344,7 +345,7 @@ func newEpollConn(conn io.ReadWriter, handler EpollHandler, eof []byte) error {
 		n, err = conn.Read(b[len(b):cap(b)])
 		b = b[:len(b)+n]
 		if err != nil {
-			if err == io.EOF {
+			if errors.Is(err, io.EOF) {
 				break
 			}
 			return err
