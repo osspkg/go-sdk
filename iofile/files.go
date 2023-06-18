@@ -1,15 +1,16 @@
+/*
+ *  Copyright (c) 2023 Mikhail Knyazhev <markus621@yandex.ru>. All rights reserved.
+ *  Use of this source code is governed by a BSD 3-Clause license that can be found in the LICENSE file.
+ */
+
 package iofile
 
 import (
-	"encoding/hex"
-	"fmt"
-	"hash"
 	"io"
 	"io/fs"
 	"os"
 	"path/filepath"
-
-	"github.com/osspkg/go-sdk/errors"
+	"strings"
 )
 
 func Exist(filename string) bool {
@@ -33,9 +34,10 @@ func Search(dir, filename string) ([]string, error) {
 }
 
 func Rewrite(filename string, call func([]byte) ([]byte, error)) error {
-	var perm os.FileMode = 0777
-	if ls, err := os.Lstat(filename); err != nil {
-		perm = ls.Mode().Perm()
+	if !Exist(filename) {
+		if err := os.WriteFile(filename, []byte(""), 0755); err != nil {
+			return err
+		}
 	}
 	b, err := os.ReadFile(filename)
 	if err != nil {
@@ -44,36 +46,7 @@ func Rewrite(filename string, call func([]byte) ([]byte, error)) error {
 	if b, err = call(b); err != nil {
 		return err
 	}
-	return os.WriteFile(filename, b, perm)
-}
-
-func IsValidHash(filename string, h hash.Hash, valid string) error {
-	r, err := os.Open(filename)
-	if err != nil {
-		return err
-	}
-	if _, err = io.Copy(h, r); err != nil {
-		return errors.Wrapf(err, "calculate file hash")
-	}
-	result := hex.EncodeToString(h.Sum(nil))
-	h.Reset()
-	if result != valid {
-		return fmt.Errorf("invalid hash: expected[%s] actual[%s]", valid, result)
-	}
-	return nil
-}
-
-func Hash(filename string, h hash.Hash) (string, error) {
-	r, err := os.Open(filename)
-	if err != nil {
-		return "", err
-	}
-	if _, err = io.Copy(h, r); err != nil {
-		return "", errors.Wrapf(err, "calculate file hash")
-	}
-	result := hex.EncodeToString(h.Sum(nil))
-	h.Reset()
-	return result, nil
+	return os.WriteFile(filename, b, 0755)
 }
 
 func Copy(dst, src string, mode os.FileMode) error {
@@ -99,4 +72,10 @@ func Copy(dst, src string, mode os.FileMode) error {
 
 	_, err = io.Copy(dist, source)
 	return err
+}
+
+func Folder(filename string) string {
+	dir := filepath.Dir(filename)
+	tree := strings.Split(dir, string(os.PathSeparator))
+	return tree[len(tree)-1]
 }
