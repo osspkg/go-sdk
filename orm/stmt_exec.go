@@ -18,7 +18,7 @@ var poolExec = sync.Pool{New: func() interface{} { return &exec{} }}
 type exec struct {
 	Q string
 	P [][]interface{}
-	B func(result Result) error
+	B func(rowsAffected, lastInsertId int64) error
 }
 
 func (v *exec) SQL(query string, args ...interface{}) {
@@ -31,7 +31,7 @@ func (v *exec) Params(args ...interface{}) {
 		v.P = append(v.P, args)
 	}
 }
-func (v *exec) Bind(call func(result Result) error) {
+func (v *exec) Bind(call func(rowsAffected, lastInsertId int64) error) {
 	v.B = call
 }
 
@@ -42,32 +42,12 @@ func (v *exec) Reset() *exec {
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-type execResult struct {
-	R int64
-	L int64
-}
-
-func (v *execResult) RowsAffected() int64 {
-	return v.R
-}
-
-func (v *execResult) LastInsertId() int64 {
-	return v.L
-}
-
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
 type (
-	//Result exec result model
-	Result interface {
-		RowsAffected() int64
-		LastInsertId() int64
-	}
 	//Executor interface for generate execute query
 	Executor interface {
 		SQL(query string, args ...interface{})
 		Params(args ...interface{})
-		Bind(call func(result Result) error)
+		Bind(call func(rowsAffected, lastInsertId int64) error)
 	}
 )
 
@@ -84,19 +64,16 @@ func callExecContext(ctx context.Context, db dbGetter, call func(q Executor), di
 		return errInvalidModelPool
 	}
 	defer poolExec.Put(q.Reset())
-
 	call(q)
-
 	if len(q.P) == 0 {
 		q.P = append(q.P, []interface{}{})
 	}
-
 	stmt, err := db.PrepareContext(ctx, q.Q)
 	if err != nil {
 		return err
 	}
 	defer stmt.Close() //nolint: errcheck
-	total := &execResult{}
+	var rowsAffected, lastInsertId int64
 	for _, params := range q.P {
 		result, err0 := stmt.ExecContext(ctx, params...)
 		if err0 != nil {
@@ -106,14 +83,14 @@ func callExecContext(ctx context.Context, db dbGetter, call func(q Executor), di
 		if err0 != nil {
 			return err0
 		}
-		total.R += rows
+		rowsAffected += rows
 
 		if dialect != schema.PgSQLDialect {
 			rows, err0 = result.LastInsertId()
 			if err0 != nil {
 				return err0
 			}
-			total.L = rows
+			lastInsertId = rows
 		}
 	}
 	if err = stmt.Close(); err != nil {
@@ -122,5 +99,5 @@ func callExecContext(ctx context.Context, db dbGetter, call func(q Executor), di
 	if q.B == nil {
 		return nil
 	}
-	return q.B(total)
+	return q.B(rowsAffected, lastInsertId)
 }

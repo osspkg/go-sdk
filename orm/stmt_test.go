@@ -79,9 +79,9 @@ func TestUnit_Stmt(t *testing.T) {
 		e.Params(3, "cccc")
 		e.Params(4, "dddd")
 
-		e.Bind(func(result orm.Result) error {
-			assert.Equal(t, int64(2), result.RowsAffected())
-			assert.Equal(t, int64(4), result.LastInsertId())
+		e.Bind(func(rowsAffected, lastInsertId int64) error {
+			assert.Equal(t, int64(2), rowsAffected)
+			assert.Equal(t, int64(4), lastInsertId)
 			return nil
 		})
 	})
@@ -106,9 +106,9 @@ func TestUnit_Stmt(t *testing.T) {
 			e.SQL("insert into `users` (`id`, `name`) values (?, ?);")
 			e.Params(10, "abcd")
 			e.Params(11, "efgh")
-			e.Bind(func(result orm.Result) error {
-				assert.Equal(t, int64(2), result.RowsAffected())
-				assert.Equal(t, int64(11), result.LastInsertId())
+			e.Bind(func(rowsAffected, lastInsertId int64) error {
+				assert.Equal(t, int64(2), rowsAffected)
+				assert.Equal(t, int64(11), lastInsertId)
 				return nil
 			})
 		})
