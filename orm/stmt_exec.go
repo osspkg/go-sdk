@@ -42,11 +42,26 @@ func (v *exec) Reset() *exec {
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+type execResult struct {
+	R int64
+	L int64
+}
+
+func (v *execResult) RowsAffected() int64 {
+	return v.R
+}
+
+func (v *execResult) LastInsertId() int64 {
+	return v.L
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 type (
 	//Result exec result model
-	Result struct {
-		RowsAffected int64
-		LastInsertId int64
+	Result interface {
+		RowsAffected() int64
+		LastInsertId() int64
 	}
 	//Executor interface for generate execute query
 	Executor interface {
@@ -81,7 +96,7 @@ func callExecContext(ctx context.Context, db dbGetter, call func(q Executor), di
 		return err
 	}
 	defer stmt.Close() //nolint: errcheck
-	var total Result
+	total := &execResult{}
 	for _, params := range q.P {
 		result, err0 := stmt.ExecContext(ctx, params...)
 		if err0 != nil {
@@ -91,14 +106,14 @@ func callExecContext(ctx context.Context, db dbGetter, call func(q Executor), di
 		if err0 != nil {
 			return err0
 		}
-		total.RowsAffected += rows
+		total.R += rows
 
 		if dialect != schema.PgSQLDialect {
 			rows, err0 = result.LastInsertId()
 			if err0 != nil {
 				return err0
 			}
-			total.LastInsertId = rows
+			total.L = rows
 		}
 	}
 	if err = stmt.Close(); err != nil {
