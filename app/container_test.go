@@ -192,7 +192,7 @@ func (d *demo6) Name() string {
 	return "DEMO 6"
 }
 
-func TestUnit_Invoke(t *testing.T) {
+func TestUnit_DicInvoke(t *testing.T) {
 	dep := newDic(NewContext())
 	require.NoError(t, dep.Register([]interface{}{
 		newDemo6,

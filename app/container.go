@@ -97,7 +97,7 @@ func (v *_dic) Build() error {
 		return errors.Wrapf(err, "dependency graph calculation")
 	}
 
-	return v.exec(nil)
+	return v.exec()
 }
 
 // Inject - obtained dependence
@@ -108,6 +108,12 @@ func (v *_dic) Inject(item interface{}) error {
 
 // Invoke - obtained dependence
 func (v *_dic) Invoke(item interface{}) error {
+	ref := reflect.TypeOf(item)
+	addr, ok := getRefAddr(ref)
+	if !ok {
+		return fmt.Errorf("resolve invoke reference")
+	}
+
 	if err := v.Register(item); err != nil {
 		return err
 	}
@@ -121,17 +127,13 @@ func (v *_dic) Invoke(item interface{}) error {
 		return errors.Wrapf(err, "building dependency graph")
 	}
 
+	v.kahn.BreakPoint(addr)
+
 	if err = v.kahn.Build(); err != nil {
 		return errors.Wrapf(err, "dependency graph calculation")
 	}
 
-	ref := reflect.TypeOf(item)
-	addr, ok := getRefAddr(ref)
-	if !ok {
-		return fmt.Errorf("resolve invoke reference")
-	}
-
-	return v.exec(&addr)
+	return v.exec()
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -240,7 +242,7 @@ func (v *_dic) callArgs(item interface{}) ([]reflect.Value, error) {
 	}
 }
 
-func (v *_dic) exec(breakPoint *string) error {
+func (v *_dic) exec() error {
 	names := make(map[string]struct{})
 	for _, name := range v.kahn.Result() {
 		if name == empty {
@@ -288,10 +290,6 @@ func (v *_dic) exec(breakPoint *string) error {
 			}
 		}
 		delete(names, name)
-
-		if breakPoint != nil && *breakPoint == name {
-			break
-		}
 	}
 
 	v.srv.IterateOver()
