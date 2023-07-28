@@ -78,7 +78,7 @@ func (a *_app) ConfigFile(filename string, configs ...interface{}) App {
 	return a
 }
 
-// Run run application
+// Run application
 func (a *_app) Run() {
 	a.prepareConfig(false)
 
@@ -112,7 +112,6 @@ func (a *_app) Run() {
 	if result {
 		os.Exit(1)
 	}
-	os.Exit(0)
 }
 
 // Invoke run application
@@ -122,19 +121,16 @@ func (a *_app) Invoke(call interface{}) {
 	result := a.steps(
 		[]step{
 			{
-				Message: "Registering dependencies",
-				Call:    func() error { return a.packages.Register(a.modules...) },
+				Call: func() error { return a.packages.Register(a.modules...) },
 			},
 			{
-				Message: "Running dependencies",
-				Call:    func() error { return a.packages.Invoke(call) },
+				Call: func() error { return a.packages.Invoke(call) },
 			},
 		},
 		func(_ bool) {},
 		[]step{
 			{
-				Message: "Stop dependencies",
-				Call:    func() error { return a.packages.Down() },
+				Call: func() error { return a.packages.Down() },
 			},
 		},
 	)
@@ -142,7 +138,6 @@ func (a *_app) Invoke(call interface{}) {
 	if result {
 		os.Exit(1)
 	}
-	os.Exit(0)
 }
 
 func (a *_app) prepareConfig(interactive bool) {
@@ -207,7 +202,9 @@ func (a *_app) steps(up []step, wait func(bool), down []step) bool {
 	var erc int
 
 	for _, s := range up {
-		a.log.Infof(s.Message)
+		if len(s.Message) > 0 {
+			a.log.Infof(s.Message)
+		}
 		if err := s.Call(); err != nil {
 			a.log.WithFields(log.Fields{
 				"err": err.Error(),
@@ -220,7 +217,9 @@ func (a *_app) steps(up []step, wait func(bool), down []step) bool {
 	wait(erc > 0)
 
 	for _, s := range down {
-		a.log.Infof(s.Message)
+		if len(s.Message) > 0 {
+			a.log.Infof(s.Message)
+		}
 		if err := s.Call(); err != nil {
 			a.log.WithFields(log.Fields{
 				"err": err.Error(),
