@@ -168,9 +168,7 @@ func newDemo5() error { return fmt.Errorf("fail init constructor newDemo5") }
 
 func TestUnit_Dependencies4(t *testing.T) {
 	dep := newDic(NewContext())
-	require.NoError(t, dep.Register([]interface{}{
-		newDemo5,
-	}...))
+	require.NoError(t, dep.Register(newDemo5))
 	err := dep.Build()
 	require.Error(t, err)
 	fmt.Println(err.Error())
@@ -192,13 +190,21 @@ func (d *demo6) Name() string {
 	return "DEMO 6"
 }
 
-func TestUnit_DicInvoke(t *testing.T) {
+func TestUnit_DicInvoke1(t *testing.T) {
 	dep := newDic(NewContext())
-	require.NoError(t, dep.Register([]interface{}{
-		newDemo6,
-	}...))
+	require.NoError(t, dep.Register(newDemo6))
 	require.NoError(t, dep.Invoke(func(d *demo6) {
 		fmt.Println("Invoke", d.Name())
+	}))
+	require.NoError(t, dep.Down())
+	require.Error(t, dep.Down())
+}
+
+func TestUnit_DicInvoke2(t *testing.T) {
+	dep := newDic(NewContext())
+	require.NoError(t, dep.Register(newDemo6))
+	require.NoError(t, dep.Invoke(func() {
+		fmt.Println("Invoke")
 	}))
 	require.NoError(t, dep.Down())
 	require.Error(t, dep.Down())
