@@ -6,27 +6,28 @@
 package app
 
 import (
-	"os"
-
 	"github.com/osspkg/go-sdk/console"
 	"github.com/osspkg/go-sdk/log"
 	"github.com/osspkg/go-sdk/syscall"
 )
 
 type (
-	//ENV type for enviremants (prod, dev, stage, etc)
+	//ENV type for environments (prod, dev, stage, etc)
 	ENV string
 
 	App interface {
 		Logger(log log.Logger) App
 		Modules(modules ...interface{}) App
 		ConfigFile(filename string, configs ...interface{}) App
+		PidFile(filename string) App
 		Run()
 		Invoke(call interface{})
+		ExitFunc(call func(code int)) App
 	}
 
 	_app struct {
 		cfile    string
+		pidfile  string
 		configs  Modules
 		modules  Modules
 		sources  Sources
@@ -34,6 +35,7 @@ type (
 		logout   *_log
 		log      log.Logger
 		ctx      Context
+		exitFunc func(code int)
 	}
 )
 
@@ -45,6 +47,7 @@ func New() App {
 		configs:  Modules{},
 		packages: newDic(ctx),
 		ctx:      ctx,
+		exitFunc: func(_ int) {},
 	}
 }
 
@@ -75,6 +78,16 @@ func (a *_app) ConfigFile(filename string, configs ...interface{}) App {
 		a.configs = a.configs.Add(config)
 	}
 
+	return a
+}
+
+func (a *_app) PidFile(filename string) App {
+	a.pidfile = filename
+	return a
+}
+
+func (a *_app) ExitFunc(v func(code int)) App {
+	a.exitFunc = v
 	return a
 }
 
@@ -110,8 +123,9 @@ func (a *_app) Run() {
 	)
 	console.FatalIfErr(a.logout.Close(), "close log file")
 	if result {
-		os.Exit(1)
+		a.exitFunc(1)
 	}
+	a.exitFunc(0)
 }
 
 // Invoke run application
@@ -136,8 +150,9 @@ func (a *_app) Invoke(call interface{}) {
 	)
 	console.FatalIfErr(a.logout.Close(), "close log file")
 	if result {
-		os.Exit(1)
+		a.exitFunc(1)
 	}
+	a.exitFunc(0)
 }
 
 func (a *_app) prepareConfig(interactive bool) {
@@ -182,11 +197,11 @@ func (a *_app) prepareConfig(interactive bool) {
 		}
 		a.modules = a.modules.Add(configs...)
 
-		if !interactive && len(config.PidFile) > 0 {
-			if err = syscall.Pid(config.PidFile); err != nil {
+		if !interactive && len(a.pidfile) > 0 {
+			if err = syscall.Pid(a.pidfile); err != nil {
 				a.log.WithFields(log.Fields{
 					"err":  err.Error(),
-					"file": config.PidFile,
+					"file": a.pidfile,
 				}).Fatalf("Create pid file")
 			}
 		}
