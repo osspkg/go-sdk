@@ -151,9 +151,10 @@ func (v *_dic) calcFunc(outAddr string, outRef reflect.Type) error {
 		inRef := outRef.In(i)
 		inAddr, _ := getRefAddr(inRef)
 
-		if _, err := v.list.Get(inAddr); err != nil {
-			return errors.Wrapf(err, "cant add [%s->%s] to graph", inAddr, outAddr)
-		}
+		//TODO: need?
+		//if _, err := v.list.Get(inAddr); err != nil {
+		//	return errors.Wrapf(err, "cant add [%s->%s] to graph", inAddr, outAddr)
+		//}
 		if err := v.kahn.Add(inAddr, outAddr); err != nil {
 			return errors.Wrapf(err, "cant add [%s->%s] to graph", inAddr, outAddr)
 		}
@@ -173,9 +174,10 @@ func (v *_dic) calcStruct(outAddr string, outRef reflect.Type) error {
 		inRef := outRef.Field(i).Type
 		inAddr, _ := getRefAddr(inRef)
 
-		if _, err := v.list.Get(inAddr); err != nil {
-			return errors.Wrapf(err, "cant add [%s->%s] to graph", inAddr, outAddr)
-		}
+		//TODO: need?
+		//if _, err := v.list.Get(inAddr); err != nil {
+		//	return errors.Wrapf(err, "cant add [%s->%s] to graph", inAddr, outAddr)
+		//}
 		if err := v.kahn.Add(inAddr, outAddr); err != nil {
 			return errors.Wrapf(err, "cant add [%s->%s] to graph", inAddr, outAddr)
 		}
