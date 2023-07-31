@@ -28,7 +28,10 @@ func TestUnit_AppInvoke(t *testing.T) {
 		s.Do2(&out)
 		out += "Done"
 	}
-	app.New().Modules(
+	app.New().ExitFunc(func(code int) {
+		t.Log("Exit Code", code)
+		require.Equal(t, 0, code)
+	}).Modules(
 		NewStruct1, &Struct2{},
 	).Invoke(call1)
 	require.Equal(t, "[Struct1.Do][Struct2.Do]Done", out)
