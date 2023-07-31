@@ -7,7 +7,7 @@ require (
 	github.com/lib/pq v1.10.9
 	github.com/mailru/easyjson v0.7.7
 	github.com/mattn/go-sqlite3 v1.14.17
-	github.com/osspkg/go-algorithms v1.2.5
+	github.com/osspkg/go-algorithms v1.2.6
 	github.com/stretchr/testify v1.8.4
 	golang.org/x/crypto v0.11.0
 	golang.org/x/oauth2 v0.10.0

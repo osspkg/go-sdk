@@ -8,8 +8,6 @@ package app
 import (
 	"fmt"
 	"reflect"
-
-	"github.com/osspkg/go-sdk/random"
 )
 
 var errType = reflect.TypeOf(new(error)).Elem()
@@ -27,7 +25,9 @@ func getRefAddr(t reflect.Type) (string, bool) {
 			return t.Elem().PkgPath() + "." + t.Elem().Name(), true
 		}
 	case reflect.Func:
-		return random.String(30) + "." + t.String(), true
+		// TODO: fix for anonymous function
+		// random.String(30) + "." + t.String(), true
+		return t.String(), true
 	}
 	return t.String(), false
 }
