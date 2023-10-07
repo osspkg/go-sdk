@@ -1,3 +1,7 @@
+## The package has been moved to "github.com/osspkg/goppy". The current package is no longer supported.
+
+---
+
 # go-sdk
 
 [![Coverage Status](https://coveralls.io/repos/github/osspkg/go-sdk/badge.svg?branch=master)](https://coveralls.io/github/osspkg/go-sdk?branch=master)
