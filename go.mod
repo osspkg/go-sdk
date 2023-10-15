@@ -1,3 +1,4 @@
+// Deprecated: The package has been moved to "github.com/osspkg/goppy". The current package is no longer supported.
 module github.com/osspkg/go-sdk
 
 go 1.17

@@ -175,7 +175,7 @@ func (f *Flags) Bool(name string, usage string) {
 		name:  name,
 		usage: usage,
 		call: func(getter ArgGetter) (interface{}, error) {
-			if val := getter.Get(name); val != nil {
+			if getter.Has(name) {
 				return true, nil
 			}
 			return false, nil

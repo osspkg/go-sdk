@@ -76,7 +76,12 @@ func (a *Args) Parse(list []string) *Args {
 			arg := Arg{}
 			v := strings.TrimLeft(list[i], "-")
 			vs := strings.SplitN(v, "=", 2)
-			if len(vs) == 2 {
+			switch len(vs) {
+			case 1:
+				arg.Key, arg.Value = vs[0], ""
+				a.list = append(a.list, arg)
+				continue
+			case 2:
 				arg.Key, arg.Value = vs[0], vs[1]
 				a.list = append(a.list, arg)
 				continue
